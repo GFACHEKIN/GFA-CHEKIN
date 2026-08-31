@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0f">
+  <title>GFA Check-In V2</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">GFA</div>
+        <div><strong>Group Fight Academy</strong><span>Brazilian Jiu-Jitsu</span></div>
+      </div>
+      <nav>
+        <button data-view="dashboard" class="nav active">Accueil</button>
+        <button data-view="checkin" class="nav">Pointage</button>
+        <button data-view="members" class="nav coach">Adhérents</button>
+        <button data-view="attendance" class="nav coach">Présences</button>
+        <button data-view="grades" class="nav coach">Grades</button>
+        <button data-view="competitions" class="nav coach">Compétitions</button>
+        <button data-view="documents" class="nav admin">Documents</button>
+        <button data-view="settings" class="nav admin">Paramètres</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div id="connectionBadge" class="badge warning">Mode démo local</div>
+        <button id="logoutBtn" class="ghost">Se déconnecter</button>
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <div><p class="eyebrow">GFA CHECK-IN</p><h1 id="title">Accueil</h1></div>
+        <div class="userbox"><div id="userName">Coach principal</div><span id="userRole">Administrateur</span></div>
+      </header>
+
+      <section id="loginView" class="login hidden">
+        <div class="login-card">
+          <div class="logo big">GFA</div>
+          <h2>Connexion</h2>
+          <p>Connecte-toi pour accéder à GFA Check-In.</p>
+          <label>Email</label><input id="loginEmail" type="email" placeholder="coach@gfa.fr">
+          <label>Mot de passe</label><input id="loginPassword" type="password" placeholder="••••••••">
+          <button id="loginBtn" class="primary">Se connecter</button>
+          <button id="demoBtn" class="secondary">Entrer en mode démo</button>
+          <div id="loginMessage" class="message"></div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="view active">
+        <div class="hero">
+          <div><span class="pill">Saison 2026 / 2027</span><h2>Bienvenue sur GFA Check-In</h2><p>Gère les adhérents, présences, grades, compétitions et documents du club.</p></div>
+          <div class="hero-icon">🥋</div>
+        </div>
+        <div id="stats" class="grid four"></div>
+        <div class="grid two">
+          <div class="card"><h3>Présents aujourd’hui</h3><div id="todayList"></div></div>
+          <div class="card"><h3>Prochains événements</h3><div id="nextEvents"></div></div>
+        </div>
+      </section>
+
+      <section id="checkin" class="view">
+        <div class="card narrow">
+          <h3>Enregistrer une présence</h3>
+          <label>Adhérent</label><select id="checkinMember"></select>
+          <label>Section</label>
+          <select id="checkinSection">
+            <option>Adultes</option><option>Kids / Ados</option><option>100% Women</option><option>Grappling</option><option>Compétiteurs</option>
+          </select>
+          <label>Cours</label><select id="checkinClass"></select>
+          <button id="checkinSubmit" class="primary">Valider la présence</button>
+          <div id="checkinMsg" class="message"></div>
+        </div>
+      </section>
+
+      <section id="members" class="view coach">
+        <div class="section-head"><div><p class="eyebrow">BASE ADHÉRENTS</p><h2>Adhérents</h2></div><button id="addMemberBtn" class="primary admin">+ Ajouter</button></div>
+        <div class="toolbar"><input id="memberSearch" placeholder="Rechercher..."><select id="memberSectionFilter"><option value="">Toutes les sections</option><option>Adultes</option><option>Kids / Ados</option><option>100% Women</option><option>Grappling</option><option>Compétiteurs</option></select></div>
+        <div id="membersGrid" class="grid three"></div>
+      </section>
+
+      <section id="attendance" class="view coach">
+        <div class="section-head"><div><p class="eyebrow">SUIVI</p><h2>Présences</h2></div><button id="exportBtn" class="secondary">Exporter CSV</button></div>
+        <div class="card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Nom</th><th>Section</th><th>Cours</th></tr></thead><tbody id="attendanceBody"></tbody></table></div></div>
+      </section>
+
+      <section id="grades" class="view coach">
+        <div class="section-head"><div><p class="eyebrow">PROGRESSION</p><h2>Grades</h2></div></div>
+        <div id="gradesGrid" class="grid three"></div>
+      </section>
+
+      <section id="competitions" class="view coach">
+        <div class="section-head"><div><p class="eyebrow">COMPÉTITIONS</p><h2>Compétitions</h2></div><button id="addCompetitionBtn" class="primary admin">+ Ajouter</button></div>
+        <div id="competitionList" class="timeline"></div>
+      </section>
+
+      <section id="documents" class="view admin">
+        <div class="section-head"><div><p class="eyebrow">ADMINISTRATION</p><h2>Documents</h2></div></div>
+        <div class="grid three">
+          <div class="card"><h3>Certificats médicaux</h3><p class="muted">Prévu pour stockage Firebase Storage.</p></div>
+          <div class="card"><h3>Fiches d’inscription</h3><p class="muted">Centralisation des pièces adhérents.</p></div>
+          <div class="card"><h3>Documents association</h3><p class="muted">Statuts, assurance, récépissés et documents officiels.</p></div>
+        </div>
+      </section>
+
+      <section id="settings" class="view admin">
+        <div class="section-head"><div><p class="eyebrow">CONFIGURATION</p><h2>Paramètres</h2></div></div>
+        <div class="grid two">
+          <div class="card">
+            <h3>Connexion Firebase</h3>
+            <p class="muted">Colle ici la configuration de ton projet Firebase pour activer la base partagée.</p>
+            <label>apiKey</label><input id="fbApiKey">
+            <label>authDomain</label><input id="fbAuthDomain">
+            <label>projectId</label><input id="fbProjectId">
+            <label>storageBucket</label><input id="fbStorageBucket">
+            <label>messagingSenderId</label><input id="fbMessagingSenderId">
+            <label>appId</label><input id="fbAppId">
+            <button id="saveFirebaseBtn" class="primary">Enregistrer Firebase</button>
+            <div id="firebaseMsg" class="message"></div>
+          </div>
+          <div class="card">
+            <h3>Rôles</h3>
+            <div class="role-row"><span>Coach principal</span><b>Accès total</b></div>
+            <div class="role-row"><span>Coachs assistants</span><b>Présences / suivi</b></div>
+            <div class="role-row"><span>Adhérents</span><b>Pointage</b></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="memberModal">
+    <form id="memberForm">
+      <div class="modal-head"><h3>Fiche adhérent</h3><button type="button" id="closeMemberModal">✕</button></div>
+      <div class="grid two">
+        <div><label>Prénom</label><input name="firstName" required></div>
+        <div><label>Nom</label><input name="lastName" required></div>
+        <div><label>Date de naissance</label><input type="date" name="birthDate"></div>
+        <div><label>Section</label><select name="section"><option>Adultes</option><option>Kids / Ados</option><option>100% Women</option><option>Grappling</option><option>Compétiteurs</option></select></div>
+        <div><label>Grade</label><select name="belt"><option>Blanche</option><option>Grise</option><option>Jaune</option><option>Orange</option><option>Verte</option><option>Bleue</option><option>Violette</option><option>Marron</option><option>Noire</option></select></div>
+        <div><label>Barrettes</label><input type="number" min="0" max="4" name="stripes" value="0"></div>
+        <div><label>Téléphone</label><input name="phone"></div>
+        <div><label>Email</label><input type="email" name="email"></div>
+      </div>
+      <label>Adresse complète</label><input name="address">
+      <label>Personne à prévenir en urgence</label><input name="emergency">
+      <label>Téléphone urgence</label><input name="emergencyPhone">
+      <div class="actions"><button type="button" id="cancelMember" class="secondary">Annuler</button><button class="primary">Enregistrer</button></div>
+    </form>
+  </dialog>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
