@@ -150,7 +150,19 @@
       <div class="actions"><button type="button" id="cancelMember" class="secondary">Annuler</button><button class="primary">Enregistrer</button></div>
     </form>
   </dialog>
+<dialog id="memberDetailsModal">
+  <div class="modal-head">
+    <h3>Fiche adhérent</h3>
+    <button type="button" id="closeMemberDetails">×</button>
+  </div>
 
+  <div id="memberDetailsContent"></div>
+
+  <div class="actions">
+    <button type="button" id="editMemberBtn" class="secondary">Modifier</button>
+    <button type="button" id="deleteMemberBtn" class="primary">Supprimer</button>
+  </div>
+</dialog>
   <script type="module" src="./app.js"></script>
 </body>
 </html>
