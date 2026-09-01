@@ -59,24 +59,52 @@ const today=()=>new Date().toISOString().slice(0,10);
 const fmt=d=>new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium"}).format(new Date(d));
 
 async function initFirebase(){
-  if(!state.firebaseConfig?.apiKey || !state.firebaseConfig?.projectId) return false;
+  if(!state.firebaseConfig?.apiKey || !state.firebaseConfig?.projectId) {
+    $("#loginView").classList.add("hidden");
+    return false;
+  }
   try{
     const appMod=await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
     const authMod=await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
     const fsMod=await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+
     state.fbApp=appMod.initializeApp(state.firebaseConfig);
     state.auth=authMod.getAuth(state.fbApp);
     state.authMod=authMod;
     state.db=fsMod.getFirestore(state.fbApp);
     state.fsMod=fsMod;
     state.mode="firebase";
-    $("#connectionBadge").textContent="Firebase connecté";
-    $("#connectionBadge").className="badge success";
-    await loadCloudData();
+
+    $("#connectionBadge").textContent="Firebase prêt";
+    $("#connectionBadge").className="badge warning";
+
+    authMod.onAuthStateChanged(state.auth, async user=>{
+      if(user){
+        state.user={name:user.email || "Coach principal"};
+        state.role="admin";
+        $("#loginView").classList.add("hidden");
+        $("#connectionBadge").textContent="Firebase connecté";
+        $("#connectionBadge").className="badge success";
+        try{
+          await loadCloudData();
+        }catch(e){
+          console.error(e);
+          $("#connectionBadge").textContent="Erreur Firestore";
+          alert("Connexion réussie, mais Firestore refuse l'accès. Vérifie les règles Firestore.");
+        }
+        renderAll();
+      }else{
+        $("#loginView").classList.remove("hidden");
+        $("#connectionBadge").textContent="Connexion requise";
+        $("#connectionBadge").className="badge warning";
+      }
+    });
     return true;
   }catch(e){
     console.error(e);
     $("#connectionBadge").textContent="Firebase non disponible";
+    $("#loginView").classList.remove("hidden");
+    $("#loginMessage").textContent="Impossible de charger Firebase. Recharge la page.";
     return false;
   }
 }
@@ -154,13 +182,34 @@ $("#closeMemberModal").addEventListener("click",()=>$("#memberModal").close());
 $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
 $("#memberForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  const data=Object.fromEntries(new FormData(e.target));
-  data.stripes=Number(data.stripes||0);
-  const localId=crypto.randomUUID();
-  if(state.mode==="firebase"){
-    const id=await addCloud("members",data); state.members.push({id,...data});
-  } else state.members.push({id:localId,...data});
-  saveLocal(); e.target.reset(); $("#memberModal").close(); renderAll();
+  const submitBtn=e.target.querySelector('button[type="submit"], button:not([type])');
+  const oldText=submitBtn?.textContent || "Enregistrer";
+  if(submitBtn){submitBtn.disabled=true;submitBtn.textContent="Enregistrement...";}
+  try{
+    const data=Object.fromEntries(new FormData(e.target));
+    data.stripes=Number(data.stripes||0);
+    const localId=crypto.randomUUID();
+
+    if(state.mode==="firebase"){
+      if(!state.auth?.currentUser){
+        throw new Error("Vous devez être connecté avant d'enregistrer un adhérent.");
+      }
+      const id=await addCloud("members",data);
+      state.members.push({id,...data});
+    } else {
+      state.members.push({id:localId,...data});
+    }
+
+    saveLocal();
+    e.target.reset();
+    $("#memberModal").close();
+    renderAll();
+  }catch(err){
+    console.error(err);
+    alert("Enregistrement impossible : " + (err?.message || "erreur inconnue"));
+  }finally{
+    if(submitBtn){submitBtn.disabled=false;submitBtn.textContent=oldText;}
+  }
 });
 
 $("#checkinClass").innerHTML=schedule.map(s=>`<option>${s}</option>`).join("");
@@ -202,7 +251,7 @@ $("#saveFirebaseBtn").addEventListener("click",async()=>{
   $("#firebaseMsg").textContent="Configuration enregistrée. Recharge la page pour activer Firebase.";$("#firebaseMsg").className="message ok";
 });
 
-$("#demoBtn").addEventListener("click",()=>{$("#loginView").classList.add("hidden");state.role="admin";renderAll()});
+$("#demoBtn").addEventListener("click",()=>{state.mode="local";$("#loginView").classList.add("hidden");state.role="admin";$("#connectionBadge").textContent="Mode démo local";$("#connectionBadge").className="badge warning";renderAll()});
 $("#loginBtn").addEventListener("click",async()=>{
   if(state.mode!=="firebase"){ $("#loginMessage").textContent="Configure Firebase dans Paramètres ou utilise le mode démo."; return; }
   try{
