@@ -159,6 +159,24 @@ function renderMembers(){
 });
 $("#checkinMember").innerHTML=state.members.map(m=>`<option value="${m.id}">${m.firstName} ${m.lastName}</option>`).join("");
 }
+function openMemberDetails(member){
+  if(!member) return;
+
+  $("#memberDetailsContent").innerHTML = `
+    <p><strong>Nom :</strong> ${member.lastName || ""}</p>
+    <p><strong>Prénom :</strong> ${member.firstName || ""}</p>
+    <p><strong>Section :</strong> ${member.section || "—"}</p>
+    <p><strong>Grade :</strong> ${member.belt || "—"}</p>
+    <p><strong>Barrettes :</strong> ${member.stripes || 0}/4</p>
+    <p><strong>Téléphone :</strong> ${member.phone || "—"}</p>
+    <p><strong>Email :</strong> ${member.email || "—"}</p>
+    <p><strong>Adresse :</strong> ${member.address || "—"}</p>
+    <p><strong>Personne à prévenir :</strong> ${member.emergency || "—"}</p>
+    <p><strong>Téléphone urgence :</strong> ${member.emergencyPhone || "—"}</p>
+  `;
+
+  $("#memberDetailsModal").showModal();
+}
 function renderAttendance(){
   $("#attendanceBody").innerHTML=state.attendance.slice().reverse().map(a=>`<tr><td>${fmt(a.date)}</td><td>${a.name}</td><td>${a.section}</td><td>${a.className}</td></tr>`).join("");
 }
