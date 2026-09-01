@@ -269,5 +269,56 @@ if(state.firebaseConfig){
     const prop=k[0].toLowerCase()+k.slice(1); const el=$("#fb"+k); if(el) el.value=state.firebaseConfig[prop]||"";
   });
 }
+// Fiche adhérent
+let selectedMemberId = null;
+
+function openMemberDetails(member) {
+  selectedMemberId = member.id;
+
+  $("#memberDetailsContent").innerHTML = `
+    <p><strong>Nom :</strong> ${member.lastName || ""}</p>
+    <p><strong>Prénom :</strong> ${member.firstName || ""}</p>
+    <p><strong>Section :</strong> ${member.section || ""}</p>
+    <p><strong>Grade :</strong> ${member.belt || ""}</p>
+    <p><strong>Barrettes :</strong> ${member.stripes || 0}</p>
+    <p><strong>Téléphone :</strong> ${member.phone || ""}</p>
+    <p><strong>Email :</strong> ${member.email || ""}</p>
+    <p><strong>Adresse :</strong> ${member.address || ""}</p>
+    <p><strong>Urgence :</strong> ${member.emergency || ""}</p>
+    <p><strong>Téléphone urgence :</strong> ${member.emergencyPhone || ""}</p>
+  `;
+
+  $("#memberDetailsModal").showModal();
+}
+
+$("#closeMemberDetails").addEventListener("click", () => {
+  $("#memberDetailsModal").close();
+});
+
+$("#editMemberBtn").addEventListener("click", () => {
+  if (!selectedMemberId) return;
+
+  const member = state.members.find(m => m.id === selectedMemberId);
+  if (!member) return;
+
+  $("#memberDetailsModal").close();
+  // L'édition complète sera reliée au formulaire adhérent ensuite.
+});
+
+$("#deleteMemberBtn").addEventListener("click", async () => {
+  if (!selectedMemberId) return;
+
+  const member = state.members.find(m => m.id === selectedMemberId);
+  if (!member) return;
+
+  if (!confirm(`Supprimer ${member.firstName} ${member.lastName} ?`)) return;
+
+  state.members = state.members.filter(m => m.id !== selectedMemberId);
+  selectedMemberId = null;
+
+  $("#memberDetailsModal").close();
+  await save();
+  renderAll();
+});
 renderAll();
 await initFirebase();
