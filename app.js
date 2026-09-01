@@ -151,13 +151,32 @@ function renderEvents(){
   $("#nextEvents").innerHTML=list.map(c=>`<div class="list-item"><b>${c.name}</b><span>${fmt(c.date)}</span></div>`).join("");
 }
 function renderMembers(){
-  const q=$("#memberSearch").value.toLowerCase(), f=$("#memberSectionFilter").value;
-  const list=state.members.filter(m=>(`${m.firstName} ${m.lastName}`.toLowerCase().includes(q))&&(!f||m.section===f));
-  $("#membersGrid").innerHTML=list.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes||0}/4 barrettes</span></div></div>`).join("");document.querySelectorAll("#membersGrid .member-card").forEach((card,index)=>
+  const q = $("#memberSearch").value.toLowerCase();
+  const f = $("#memberSectionFilter").value;
+
+  const list = state.members.filter(m =>
+    `${m.firstName} ${m.lastName}`.toLowerCase().includes(q) &&
+    (!f || m.section === f)
+  );
+
+  $("#membersGrid").innerHTML = list.map(m => `
+    <div class="member-card">
+      <h4>${m.firstName} ${m.lastName}</h4>
+      <p>${m.section}</p>
+      <div class="belt-info">
+        <span>${m.belt || "Blanche"}</span>
+        <span>${m.stripes || 0}/4 barrettes</span>
+      </div>
+    </div>
+  `).join("");
+
   document.querySelectorAll("#membersGrid .member-card").forEach((card,index)=>{
-  card.addEventListener("click",()=>openMemberDetails(list[index]));
-});
-$("#checkinMember").innerHTML=state.members.map(m=>`<option value="${m.id}">${m.firstName} ${m.lastName}</option>`).join("");
+    card.addEventListener("click",()=>openMemberDetails(list[index]));
+  });
+
+  $("#checkinMember").innerHTML = state.members
+    .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
+    .join("");
 }
 function openMemberDetails(member){
   if(!member) return;
