@@ -396,7 +396,7 @@ $("#deleteMemberBtn").addEventListener("click", async () => {
   if (!member) return;
 
   if (!confirm(`Supprimer ${member.firstName} ${member.lastName} ?`)) return;
-
+await deleteCloud("members", selectedMemberId);
   state.members = state.members.filter(m => m.id !== selectedMemberId);
   selectedMemberId = null;
 
