@@ -124,6 +124,10 @@ async function addCloud(collectionName,data){
   const {collection,addDoc}=state.fsMod;
   const ref=await addDoc(collection(state.db,collectionName),data);
   return ref.id;
+}async function updateCloud(collectionName, id, data){
+  if(state.mode!=="firebase") return;
+  const {doc, updateDoc}=state.fsMod;
+  await updateDoc(doc(state.db, collectionName, id), data);
 }
 
 function applyRole(){
@@ -211,17 +215,33 @@ $("#memberForm").addEventListener("submit",async e=>{
   try{
     const data=Object.fromEntries(new FormData(e.target));
     data.stripes=Number(data.stripes||0);
-    const localId=crypto.randomUUID();
+   const localId=crypto.randomUUID();
 
-    if(state.mode==="firebase"){
-      if(!state.auth?.currentUser){
-        throw new Error("Vous devez être connecté avant d'enregistrer un adhérent.");
-      }
-      const id=await addCloud("members",data);
-      state.members.push({id,...data});
-    } else {
-      state.members.push({id:localId,...data});
-    }
+if(state.mode==="firebase"){
+  if(!state.auth?.currentUser){
+    throw new Error("Vous devez être connecté avant d'enregistrer un adhérent.");
+  }
+
+  if(selectedMemberId){
+    await updateCloud("members", selectedMemberId, data);
+    state.members = state.members.map(m =>
+      m.id === selectedMemberId ? {id:m.id,...data} : m
+    );
+  } else {
+    const id=await addCloud("members",data);
+    state.members.push({id,...data});
+  }
+} else {
+  if(selectedMemberId){
+    state.members = state.members.map(m =>
+      m.id === selectedMemberId ? {id:m.id,...data} : m
+    );
+  } else {
+    state.members.push({id:localId,...data});
+  }
+}
+
+selectedMemberId = null;
 
     saveLocal();
     e.target.reset();
