@@ -41,6 +41,7 @@ const state = {
   members: JSON.parse(localStorage.getItem("gfa_v2_members")||"null") || defaults.members,
   attendance: JSON.parse(localStorage.getItem("gfa_v2_attendance")||"null") || defaults.attendance,
   competitions: JSON.parse(localStorage.getItem("gfa_v2_competitions")||"null") || defaults.competitions,
+  registrations: [],
   firebaseConfig: JSON.parse(localStorage.getItem("gfa_v2_firebase")||"null") || firebasePreset
 };
 
@@ -113,10 +114,11 @@ async function loadCloudData(){
   const {collection,getDocs}=state.fsMod;
   const mem=await getDocs(collection(state.db,"members"));
   const att=await getDocs(collection(state.db,"attendance"));
-  const cmp=await getDocs(collection(state.db,"competitions"));
+  const cmp=await getDocs(collection(state.db,"competitions"));const reg = await getDocs(collection(state.db,"registrations"));
   if(!mem.empty) state.members=mem.docs.map(d=>({id:d.id,...d.data()}));
   if(!att.empty) state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
-  if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));
+  if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));if(!reg.empty) 
+    state.registrations=reg.docs.map(d=>({id:d.id,...d.data()}));
   renderAll();
 }
 async function addCloud(collectionName,data){
@@ -191,9 +193,34 @@ function renderGrades(){
 }
 function renderCompetitions(){
   $("#competitionList").innerHTML=state.competitions.map(c=>`<div class="event"><strong>${fmt(c.date)}</strong><div><b>${c.name}</b><p>${c.place||""}</p></div><span class="badge warning">À venir</span></div>`).join("");
-}
-function renderAll(){renderStats();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();applyRole()}
+}function renderRegistrations(){
+  const grid = $("#registrationsGrid");
+  if(!grid) return;
 
+  const list = (state.registrations || []).filter(r => r.status !== "rejected");
+
+  if(!list.length){
+    grid.innerHTML = `<div class="card"><p>Aucune nouvelle inscription.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(r => `
+    <div class="member-card">
+      <h4>${r.firstName || ""} ${r.lastName || ""}</h4>
+      <p>${r.section || ""}</p>
+      <p><strong>Téléphone :</strong> ${r.phone || ""}</p>
+      <p><strong>Email :</strong> ${r.email || ""}</p>
+      <p><strong>Adresse :</strong> ${r.address || ""}</p>
+      <p><strong>Urgence :</strong> ${r.emergency || ""}</p>
+      <p><strong>Tél. urgence :</strong> ${r.emergencyPhone || ""}</p>
+      <div class="toolbar">
+        <button class="primary" data-accept-registration="${r.id}">Accepter</button>
+        <button class="secondary" data-reject-registration="${r.id}">Refuser</button>
+      </div>
+    </div>
+  `).join("");
+}
+function renderAll(){renderStats();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();applyRole()}
 $$(".nav").forEach(b=>b.addEventListener("click",()=>{
   if(b.classList.contains("hidden")) return;
   $$(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");
