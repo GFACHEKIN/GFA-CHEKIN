@@ -344,8 +344,22 @@ $("#editMemberBtn").addEventListener("click", () => {
   const member = state.members.find(m => m.id === selectedMemberId);
   if (!member) return;
 
+  const form = $("#memberForm");
+
+  form.elements["firstName"].value = member.firstName || "";
+  form.elements["lastName"].value = member.lastName || "";
+  form.elements["birthDate"].value = member.birthDate || "";
+  form.elements["section"].value = member.section || "Adultes";
+  form.elements["belt"].value = member.belt || "Blanche";
+  form.elements["stripes"].value = member.stripes || 0;
+  form.elements["phone"].value = member.phone || "";
+  form.elements["email"].value = member.email || "";
+  form.elements["address"].value = member.address || "";
+  form.elements["emergency"].value = member.emergency || "";
+  form.elements["emergencyPhone"].value = member.emergencyPhone || "";
+
   $("#memberDetailsModal").close();
-  // L'édition complète sera reliée au formulaire adhérent ensuite.
+  $("#memberModal").showModal();
 });
 
 $("#deleteMemberBtn").addEventListener("click", async () => {
