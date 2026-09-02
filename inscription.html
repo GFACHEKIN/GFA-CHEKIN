@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription - Group Fight Academy</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #050505;
+      color: white;
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #090a0d;
+      border: 1px solid #202633;
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      background: #d90016;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #303744;
+      background: #050505;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 30px;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #e00018;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">GFA</div>
+
+  <h1>Inscription GFA</h1>
+  <div class="subtitle">
+    Group Fight Academy • Saison 2026 / 2027
+  </div>
+
+  <form id="registrationForm">
+
+    <label>Nom *</label>
+    <input name="lastName" required>
+
+    <label>Prénom *</label>
+    <input name="firstName" required>
+
+    <label>Date de naissance *</label>
+    <input type="date" name="birthDate" required>
+
+    <label>Section *</label>
+    <select name="section" required>
+      <option value="">Choisir une section</option>
+      <option value="Adultes">Adultes</option>
+      <option value="Kids / Ados">Kids / Ados</option>
+      <option value="100% Women">100% Women</option>
+    </select>
+
+    <label>Téléphone *</label>
+    <input type="tel" name="phone" required>
+
+    <label>Email *</label>
+    <input type="email" name="email" required>
+
+    <label>Adresse complète *</label>
+    <input name="address" required>
+
+    <label>Personne à prévenir en cas d'urgence *</label>
+    <input name="emergency" required>
+
+    <label>Téléphone d'urgence *</label>
+    <input type="tel" name="emergencyPhone" required>
+
+    <button type="submit">
+      Envoyer mon inscription
+    </button>
+
+    <div id="message"></div>
+
+  </form>
+
+</div>
+
+</body>
+</html>
