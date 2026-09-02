@@ -403,6 +403,69 @@ $("#deleteMemberBtn").addEventListener("click", async () => {
   $("#memberDetailsModal").close();
   await save();
   renderAll();
+});async function deleteCloud(collectionName, id){
+  if(state.mode !== "firebase") return;
+  const {doc, deleteDoc} = state.fsMod;
+  await deleteDoc(doc(state.db, collectionName, id));
+}
+
+document.addEventListener("click", async (e) => {
+
+  const acceptBtn = e.target.closest("[data-accept-registration]");
+  if(acceptBtn){
+    const id = acceptBtn.dataset.acceptRegistration;
+    const registration = state.registrations.find(r => r.id === id);
+    if(!registration) return;
+
+    if(!confirm(`Accepter l'inscription de ${registration.firstName || ""} ${registration.lastName || ""} ?`)) return;
+
+    try{
+      const memberData = {
+        firstName: registration.firstName || "",
+        lastName: registration.lastName || "",
+        birthDate: registration.birthDate || "",
+        section: registration.section || "Adultes",
+        belt: "Blanche",
+        stripes: 0,
+        phone: registration.phone || "",
+        email: registration.email || "",
+        address: registration.address || "",
+        emergency: registration.emergency || "",
+        emergencyPhone: registration.emergencyPhone || ""
+      };
+
+      const memberId = await addCloud("members", memberData);
+      state.members.push({id: memberId, ...memberData});
+
+      await deleteCloud("registrations", id);
+      state.registrations = state.registrations.filter(r => r.id !== id);
+
+      renderAll();
+      alert("Adhérent ajouté avec succès.");
+    }catch(err){
+      console.error(err);
+      alert("Impossible d'accepter cette inscription.");
+    }
+    return;
+  }
+
+  const rejectBtn = e.target.closest("[data-reject-registration]");
+  if(rejectBtn){
+    const id = rejectBtn.dataset.rejectRegistration;
+    const registration = state.registrations.find(r => r.id === id);
+    if(!registration) return;
+
+    if(!confirm(`Refuser l'inscription de ${registration.firstName || ""} ${registration.lastName || ""} ?`)) return;
+
+    try{
+      await deleteCloud("registrations", id);
+      state.registrations = state.registrations.filter(r => r.id !== id);
+      renderAll();
+    }catch(err){
+      console.error(err);
+      alert("Impossible de refuser cette inscription.");
+    }
+  }
 });
 renderAll();
 await initFirebase();
