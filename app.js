@@ -214,8 +214,8 @@ function renderCompetitions(){
       <p><strong>Urgence :</strong> ${r.emergency || ""}</p>
       <p><strong>Tél. urgence :</strong> ${r.emergencyPhone || ""}</p>
       <div class="toolbar">
-        <button class="primary" data-accept-registration="${r.id}">Accepter</button>
-        <button class="secondary" data-reject-registration="${r.id}">Refuser</button>
+       <button type="button" class="primary" data-accept-registration="${r.id}">Accepter</button>
+<button type="button" class="secondary" data-reject-registration="${r.id}">Refuser</button>
       </div>
     </div>
   `).join("");
@@ -411,8 +411,10 @@ $("#deleteMemberBtn").addEventListener("click", async () => {
 
 document.addEventListener("click", async (e) => {
 
+
   const acceptBtn = e.target.closest("[data-accept-registration]");
   if(acceptBtn){
+    e.preventDefault();
     const id = acceptBtn.dataset.acceptRegistration;
     const registration = state.registrations.find(r => r.id === id);
     if(!registration) return;
@@ -451,6 +453,7 @@ document.addEventListener("click", async (e) => {
 
   const rejectBtn = e.target.closest("[data-reject-registration]");
   if(rejectBtn){
+    e.preventDefault();
     const id = rejectBtn.dataset.rejectRegistration;
     const registration = state.registrations.find(r => r.id === id);
     if(!registration) return;
