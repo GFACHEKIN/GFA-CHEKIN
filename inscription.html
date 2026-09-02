@@ -142,7 +142,61 @@
   </form>
 
 </div>
+
+  
   
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDWJXqKNdnbnYnvQesx5nv2oaxjyEPnFyk",
+  authDomain: "gfa-chek-in.firebaseapp.com",
+  projectId: "gfa-chek-in",
+  storageBucket: "gfa-chek-in.firebasestorage.app",
+  messagingSenderId: "17301115107",
+  appId: "1:17301115107:web:cf1757811f2c88aa5b35d6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const form = document.getElementById("registrationForm");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.textContent = "Envoi en cours...";
+
+  try {
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    await addDoc(collection(db, "registrations"), {
+      ...data,
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+
+    message.textContent = "✅ Votre inscription a bien été envoyée.";
+    form.reset();
+
+  } catch (error) {
+    console.error(error);
+    message.textContent = "❌ Impossible d'envoyer l'inscription. Réessayez.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Envoyer mon inscription";
+  }
+});
+</script>
 </body>
 </html>
