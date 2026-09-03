@@ -242,6 +242,7 @@ $("#memberForm").addEventListener("submit",async e=>{
   try{
     const data=Object.fromEntries(new FormData(e.target));
     delete data.medicalCertificate;
+    data.medicalCertificateReceived = e.target.elements["medicalCertificateReceived"].checked;
     data.stripes=Number(data.stripes||0);
    const localId=crypto.randomUUID();
 
@@ -378,6 +379,7 @@ $("#editMemberBtn").addEventListener("click", () => {
   form.elements["firstName"].value = member.firstName || "";
   form.elements["lastName"].value = member.lastName || "";
   form.elements["birthDate"].value = member.birthDate || "";
+  form.elements["medicalCertificateReceived"].checked = !!member.medicalCertificateReceived;
   form.elements["section"].value = member.section || "Adultes";
   form.elements["belt"].value = member.belt || "Blanche";
   form.elements["stripes"].value = member.stripes || 0;
