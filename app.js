@@ -256,7 +256,12 @@ $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
 
   qrToken = crypto.randomUUID();
   qrPointageActif = true;
-
+await addCloud("checkinSessions", {
+  token: qrToken,
+  course: cours,
+  active: true,
+  openedAt: new Date().toISOString()
+});
   $("#qrStatus").textContent = "Pointage ouvert : " + cours;
   $("#qrCodeBox").classList.remove("hidden");
  $("#qrCode").innerHTML = "";
