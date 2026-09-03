@@ -512,5 +512,8 @@ medicalCertificateToProvide: registration.medicalCertificateToProvide || ""
     }
   }
 });
+const urlParams = new URLSearchParams(window.location.search);
+const qrCheckinToken = urlParams.get("checkin");
+
 renderAll();
  initFirebase();
