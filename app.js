@@ -254,7 +254,8 @@ $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
 
   $("#qrStatus").textContent = "Pointage ouvert : " + cours;
   $("#qrCodeBox").classList.remove("hidden");
-  $("#qrCode").textContent = "QR code prêt à générer";
+ $("#qrCode").innerHTML = "";
+new QRCode($("#qrCode"), window.location.origin + window.location.pathname + "?checkin=" + qrToken);
 });
 
 $("#closeQrBtn").addEventListener("click", () => {
