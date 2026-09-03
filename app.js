@@ -435,7 +435,8 @@ document.addEventListener("click", async (e) => {
         email: registration.email || "",
         address: registration.address || "",
         emergency: registration.emergency || "",
-        emergencyPhone: registration.emergencyPhone || ""
+       emergencyPhone: registration.emergencyPhone || "",
+medicalCertificateToProvide: registration.medicalCertificateToProvide || ""
       };
 
       const memberId = await addCloud("members", memberData);
