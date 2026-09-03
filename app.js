@@ -1,5 +1,8 @@
 
 const schedule = [
+  "Lundi 12:00–13:30 • JJB Adultes",
+"Mardi 12:00–13:30 • JJB Adultes",
+"Jeudi 12:00–13:30 • JJB Adultes",
   "Lundi 20:00–22:30 • JJB Adultes",
   "Mardi 18:00–19:00 • Kids débutants",
   "Mardi 19:00–20:00 • Kids 2 intermédiaires",
