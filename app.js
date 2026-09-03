@@ -257,7 +257,7 @@ $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
 
   qrToken = crypto.randomUUID();
   qrPointageActif = true;
-await addCloud("checkinSessions", {
+qrSessionId = await addCloud("checkinSessions", {
   token: qrToken,
   course: cours,
   active: true,
@@ -270,8 +270,14 @@ new QRCode($("#qrCode"), window.location.origin + window.location.pathname + "?c
 });
 
 $("#closeQrBtn").addEventListener("click", async () => {
+  if (qrSessionId) {
+  await updateCloud("checkinSessions", qrSessionId, {
+    active: false
+  });
+}
   qrPointageActif = false;
   qrToken = "";
+  qrSessionId = "";
 
   $("#qrStatus").textContent = "Pointage fermé";
   $("#qrCodeBox").classList.add("hidden");
