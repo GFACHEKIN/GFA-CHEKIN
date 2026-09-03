@@ -223,6 +223,7 @@ function renderCompetitions(){
       </div>
     </div>
   `).join("");
+  }
 function renderQrCourses(){
   const qrCourse = $("#qrCourse");
   if(!qrCourse) return;
