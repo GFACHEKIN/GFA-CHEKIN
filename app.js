@@ -251,7 +251,7 @@ $("#memberSectionFilter").addEventListener("change",renderMembers);
 $("#addMemberBtn").addEventListener("click",()=>$("#memberModal").showModal());
 $("#closeMemberModal").addEventListener("click",()=>$("#memberModal").close());
 $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
-  $("#openQrBtn").addEventListener("click", () => {
+ $("#openQrBtn").addEventListener("click", async () => {
   const cours = $("#qrCourse").value;
 
   qrToken = crypto.randomUUID();
