@@ -528,6 +528,40 @@ if (qrCheckinToken) {
       .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
       .join("");
   }
-}
+}$("#qrMemberSubmit")?.addEventListener("click", async () => {
+  const memberId = $("#qrMember").value;
+  const member = state.members.find(m => m.id === memberId);
+
+  if (!member) {
+    $("#qrMemberMsg").textContent = "Adhérent introuvable.";
+    return;
+  }
+
+  const attendanceData = {
+    memberId: member.id,
+    memberName: `${member.firstName} ${member.lastName}`,
+    date: new Date().toISOString(),
+    method: "QR",
+    token: qrCheckinToken
+  };
+
+  try {
+    const attendanceId = await addCloud("attendance", attendanceData);
+
+    state.attendance.push({
+      id: attendanceId,
+      ...attendanceData
+    });
+
+    $("#qrMemberMsg").textContent =
+      `✅ Présence enregistrée pour ${member.firstName} ${member.lastName}`;
+
+    $("#qrMemberSubmit").disabled = true;
+  } catch (err) {
+    console.error(err);
+    $("#qrMemberMsg").textContent =
+      "Impossible d'enregistrer la présence.";
+  }
+});
 renderAll();
  initFirebase();
