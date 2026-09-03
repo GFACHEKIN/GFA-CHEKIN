@@ -89,7 +89,7 @@
 </head>
 
 <body>
-
+Téléphone urgence
 <div class="container">
 
   <div class="logo">GFA</div>
@@ -133,6 +133,9 @@
     <label>Téléphone d'urgence *</label>
     <input type="tel" name="emergencyPhone" required>
 
+    <label>Certificat médical</label>
+<input type="file" id="medicalCertificate" name="medicalCertificate" accept=".pdf,.jpg,.jpeg,.png">
+
     <button type="submit">
       Envoyer mon inscription
     </button>
@@ -154,7 +157,7 @@ import {
   addDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDWJXqKNdnbnYnvQesx5nv2oaxjyEPnFyk",
   authDomain: "gfa-chek-in.firebaseapp.com",
@@ -166,7 +169,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
+const storage = getStorage(app);
 const form = document.getElementById("registrationForm");
 const message = document.getElementById("message");
 
@@ -179,7 +182,15 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const data = Object.fromEntries(new FormData(form).entries());
+const medicalFile = data.medicalCertificate;
+delete data.medicalCertificate;
 
+if (medicalFile && medicalFile.size > 0) {
+  const fileRef = ref(storage, `medical-certificates/${Date.now()}-${medicalFile.name}`);
+  await uploadBytes(fileRef, medicalFile);
+  data.medicalCertificateUrl = await getDownloadURL(fileRef);
+  data.medicalCertificateName = medicalFile.name;
+}
     await addDoc(collection(db, "registrations"), {
       ...data,
       status: "pending",
