@@ -268,7 +268,7 @@ await addCloud("checkinSessions", {
 new QRCode($("#qrCode"), window.location.origin + window.location.pathname + "?checkin=" + qrToken);
 });
 
-$("#closeQrBtn").addEventListener("click", () => {
+$("#closeQrBtn").addEventListener("click", async () => {
   qrPointageActif = false;
   qrToken = "";
 
