@@ -237,7 +237,11 @@ $$(".nav").forEach(b=>b.addEventListener("click",()=>{
   if(b.classList.contains("hidden")) return;
   $$(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");
   $$(".view").forEach(v=>v.classList.remove("active"));
-  $("#"+b.dataset.view).classList.add("active");$("#title").textContent=b.textContent;
+  const target = $("#" + b.dataset.view);
+if(target){
+  target.classList.add("active");
+  $("#title").textContent = b.textContent;
+}
 }));
 
 $("#memberSearch").addEventListener("input",renderMembers);
