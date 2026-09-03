@@ -232,6 +232,7 @@ function renderQrCourses(){
     .map(c => `<option value="${c}">${c}</option>`)
     .join("");}
 let qrPointageActif = false;
+let qrSessionId = "";
 let qrToken = "";
 function renderAll(){renderStats();renderQrCourses();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();applyRole()}
 $$(".nav").forEach(b=>b.addEventListener("click",()=>{
