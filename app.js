@@ -223,8 +223,16 @@ function renderCompetitions(){
       </div>
     </div>
   `).join("");
-}
-function renderAll(){renderStats();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();applyRole()}
+function renderQrCourses(){
+  const qrCourse = $("#qrCourse");
+  if(!qrCourse) return;
+
+  qrCourse.innerHTML = schedule
+    .map(c => `<option value="${c}">${c}</option>`)
+    .join("");}
+let qrPointageActif = false;
+let qrToken = "";
+function renderAll(){renderStats();renderQrCourses();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();applyRole()}
 $$(".nav").forEach(b=>b.addEventListener("click",()=>{
   if(b.classList.contains("hidden")) return;
   $$(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");
@@ -238,6 +246,25 @@ $("#memberSectionFilter").addEventListener("change",renderMembers);
 $("#addMemberBtn").addEventListener("click",()=>$("#memberModal").showModal());
 $("#closeMemberModal").addEventListener("click",()=>$("#memberModal").close());
 $("#cancelMember").addEventListener("click",()=>$("#memberModal").close());
+  $("#openQrBtn").addEventListener("click", () => {
+  const cours = $("#qrCourse").value;
+
+  qrToken = crypto.randomUUID();
+  qrPointageActif = true;
+
+  $("#qrStatus").textContent = "Pointage ouvert : " + cours;
+  $("#qrCodeBox").classList.remove("hidden");
+  $("#qrCode").textContent = "QR code prêt à générer";
+});
+
+$("#closeQrBtn").addEventListener("click", () => {
+  qrPointageActif = false;
+  qrToken = "";
+
+  $("#qrStatus").textContent = "Pointage fermé";
+  $("#qrCodeBox").classList.add("hidden");
+  $("#qrCode").innerHTML = "";
+});
 $("#memberForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const submitBtn=e.target.querySelector('button[type="submit"], button:not([type])');
