@@ -17,6 +17,7 @@
       <nav>
         <button data-view="dashboard" class="nav active">Accueil</button>
         <button data-view="checkin" class="nav">Pointage</button>
+        <button data-view="qrcheckin" class="nav admin">QR Pointage</button>
         <button data-view="members" class="nav coach">Adhérents</button>
         <button data-view="registrations" class="nav admin">Inscriptions</button>
         <button data-view="attendance" class="nav coach">Présences</button>
@@ -62,7 +63,27 @@
         </div>
       </section>
 
-      <section id="checkin" class="view">
+      <section id="qrcheckin" class="view">
+  <div class="card">
+    <h2>QR Pointage</h2>
+    <p>Ouvre un pointage temporaire pour permettre aux adhérents de scanner le QR code à la salle.</p>
+
+    <label>Cours</label>
+    <select id="qrCourse"></select>
+
+    <div class="actions">
+      <button type="button" id="openQrBtn" class="primary">Ouvrir le pointage</button>
+      <button type="button" id="closeQrBtn" class="secondary">Fermer le pointage</button>
+    </div>
+
+    <div id="qrStatus" class="message">Pointage fermé</div>
+
+    <div id="qrCodeBox" class="card hidden">
+      <h3>QR code actif</h3>
+      <div id="qrCode"></div>
+    </div>
+  </div>
+</section><section id="checkin" class="view">
         <div class="card narrow">
           <h3>Enregistrer une présence</h3>
           <label>Adhérent</label><select id="checkinMember"></select>
