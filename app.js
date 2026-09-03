@@ -241,6 +241,7 @@ $("#memberForm").addEventListener("submit",async e=>{
   if(submitBtn){submitBtn.disabled=true;submitBtn.textContent="Enregistrement...";}
   try{
     const data=Object.fromEntries(new FormData(e.target));
+    delete data.medicalCertificate;
     data.stripes=Number(data.stripes||0);
    const localId=crypto.randomUUID();
 
