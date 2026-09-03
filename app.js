@@ -514,6 +514,20 @@ medicalCertificateToProvide: registration.medicalCertificateToProvide || ""
 });
 const urlParams = new URLSearchParams(window.location.search);
 const qrCheckinToken = urlParams.get("checkin");
+if (qrCheckinToken) {
+  $$(".view").forEach(v => v.classList.remove("active"));
 
+  const memberCheckinView = $("#memberCheckin");
+
+  if (memberCheckinView) {
+    memberCheckinView.classList.add("active");
+
+    $("#title").textContent = "Pointage adhérent";
+
+    $("#qrMember").innerHTML = state.members
+      .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
+      .join("");
+  }
+}
 renderAll();
  initFirebase();
