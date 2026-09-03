@@ -357,7 +357,7 @@ function openMemberDetails(member) {
     <p><strong>Adresse :</strong> ${member.address || ""}</p>
     <p><strong>Urgence :</strong> ${member.emergency || ""}</p>
     <p><strong>Téléphone urgence :</strong> ${member.emergencyPhone || ""}</p>
-    <p><strong>Certificat médical :</strong> ${member.medicalCertificateToProvide ? "À fournir au club" : "Non renseigné"}</p>
+    <p><strong>Certificat médical :</strong> ${member.medicalCertificateReceived ? "Reçu" : (member.medicalCertificateToProvide ? "À fournir au club" : "Non renseigné")}</p>
   `;
 
   $("#memberDetailsModal").showModal();
