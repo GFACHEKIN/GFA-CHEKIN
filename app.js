@@ -172,6 +172,7 @@ function renderMembers(){
       <div class="belt-info">
         <span>${m.belt || "Blanche"}</span>
         <span>${m.stripes || 0}/4 barrettes</span>
+        <p>Certificat : ${m.medicalCertificateReceived ? "Reçu" : (m.medicalCertificateToProvide ? "À fournir" : "Non renseigné")}</p>
       </div>
     </div>
   `).join("");
