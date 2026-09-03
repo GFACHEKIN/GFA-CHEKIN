@@ -512,4 +512,4 @@ medicalCertificateToProvide: registration.medicalCertificateToProvide || ""
   }
 });
 renderAll();
-await initFirebase();
+ initFirebase();
