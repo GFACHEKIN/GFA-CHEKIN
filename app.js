@@ -108,10 +108,7 @@ async function initFirebase(){
     $("#connectionBadge").className="badge warning";
   }
 }
-        $("#loginView").classList.remove("hidden");
-        $("#connectionBadge").textContent="Connexion requise";
-        $("#connectionBadge").className="badge warning";
-      }
+      
     });
     return true;
   }catch(e){
