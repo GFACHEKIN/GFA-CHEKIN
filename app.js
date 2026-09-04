@@ -98,6 +98,16 @@ async function initFirebase(){
         }
         renderAll();
       }else{
+  const isQrCheckin = new URLSearchParams(window.location.search).has("checkin");
+
+  if(isQrCheckin){
+    $("#loginView").classList.add("hidden");
+  }else{
+    $("#loginView").classList.remove("hidden");
+    $("#connectionBadge").textContent="Connexion requise";
+    $("#connectionBadge").className="badge warning";
+  }
+}
         $("#loginView").classList.remove("hidden");
         $("#connectionBadge").textContent="Connexion requise";
         $("#connectionBadge").className="badge warning";
