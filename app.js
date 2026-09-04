@@ -15,12 +15,8 @@ const schedule = [
 ];
 
 const defaults = {
-  members:[
-    {id:"1",firstName:"Amine",lastName:"B.",section:"Adultes",belt:"Blanche",stripes:2},
-    {id:"2",firstName:"Sofia",lastName:"M.",section:"100% Women",belt:"Bleue",stripes:1},
-    {id:"3",firstName:"Noah",lastName:"K.",section:"Kids / Ados",belt:"Grise",stripes:3},
-    {id:"4",firstName:"Lucas",lastName:"R.",section:"Compétiteurs",belt:"Violette",stripes:0}
-  ],
+members:[],
+  
   attendance:[],
   competitions:[
     {id:"c1",date:"2026-10-11",name:"Open Île-de-France",place:"Paris"},
@@ -102,6 +98,16 @@ async function initFirebase(){
 
   if(isQrCheckin){
     $("#loginView").classList.add("hidden");
+    const {collection,getDocs}=state.fsMod;
+const publicMem = await getDocs(collection(state.db,"publicMembers"));
+state.members = publicMem.docs.map(d=>({id:d.id,...d.data()}));
+
+const qrMember = $("#qrMember");
+if(qrMember){
+  qrMember.innerHTML = state.members
+    .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
+    .join("");
+}
   }else{
     $("#loginView").classList.remove("hidden");
     $("#connectionBadge").textContent="Connexion requise";
@@ -121,11 +127,18 @@ async function initFirebase(){
 }
 async function loadCloudData(){
   if(state.mode!=="firebase") return;
-  const {collection,getDocs}=state.fsMod;
+  const {collection,getDocs,doc,setDoc}=state.fsMod;
   const mem=await getDocs(collection(state.db,"members"));
   const att=await getDocs(collection(state.db,"attendance"));
   const cmp=await getDocs(collection(state.db,"competitions"));const reg = await getDocs(collection(state.db,"registrations"));
   if(!mem.empty) state.members=mem.docs.map(d=>({id:d.id,...d.data()}));
+  for (const m of state.members) {
+  await setDoc(doc(state.db,"publicMembers",m.id),{
+    firstName:m.firstName || "",
+    lastName:m.lastName || "",
+    section:m.section || ""
+  });
+}
   if(!att.empty) state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
   if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));if(!reg.empty) 
     state.registrations=reg.docs.map(d=>({id:d.id,...d.data()}));
