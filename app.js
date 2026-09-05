@@ -210,7 +210,7 @@ function renderMembers(){
 }
 
 function renderAttendance(){
-  $("#attendanceBody").innerHTML=state.attendance.slice().reverse().map(a=>`<tr><td>${fmt(a.date)}</td><td>${a.name}</td><td>${a.section}</td><td>${a.className}</td></tr>`).join("");
+  $("#attendanceBody").innerHTML=state.attendance.slice().reverse().map(a=>`<tr><td>${fmt(a.date)}</td><td>${${a.memberName || a.name || ""}}</td><td>${a.section}</td><td>${a.className}</td></tr>`).join("");
 }
 function renderGrades(){
   $("#gradesGrid").innerHTML=state.members.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes||0}/4</span></div></div>`).join("");
