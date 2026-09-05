@@ -213,7 +213,29 @@ function renderAttendance(){
 $("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td></tr>`).join("");
 }
 function renderGrades(){
-  $("#gradesGrid").innerHTML=state.members.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes||0}/4</span></div></div>`).join("");
+$("#gradesGrid").innerHTML=state.members.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes || 0}/4</span></div><button class="secondary grade-edit" data-id="${m.id}">Modifier le grade</button></div>`).join("");
+$$(".grade-edit").forEach(btn=>btn.addEventListener("click",()=>{
+  const member=state.members.find(m=>m.id===btn.dataset.id);
+  if(!member) return;
+
+  selectedMemberId=member.id;
+  const form=$("#memberForm");
+
+  form.elements["firstName"].value=member.firstName || "";
+  form.elements["lastName"].value=member.lastName || "";
+  form.elements["birthDate"].value=member.birthDate || "";
+  form.elements["medicalCertificateReceived"].checked=!!member.medicalCertificateReceived;
+  form.elements["section"].value=member.section || "Adultes";
+  form.elements["belt"].value=member.belt || "Blanche";
+  form.elements["stripes"].value=member.stripes || 0;
+  form.elements["phone"].value=member.phone || "";
+  form.elements["email"].value=member.email || "";
+  form.elements["address"].value=member.address || "";
+  form.elements["emergency"].value=member.emergency || "";
+  form.elements["emergencyPhone"].value=member.emergencyPhone || "";
+
+  $("#memberModal").showModal();
+}));
 }
 function renderCompetitions(){
   $("#competitionList").innerHTML=state.competitions.map(c=>`<div class="event"><strong>${fmt(c.date)}</strong><div><b>${c.name}</b><p>${c.place||""}</p></div><span class="badge warning">À venir</span></div>`).join("");
