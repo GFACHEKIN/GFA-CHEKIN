@@ -568,7 +568,15 @@ if (qrCheckinToken) {
     $("#qrMemberMsg").textContent = "Adhérent introuvable.";
     return;
   }
+const alreadyCheckedIn = state.attendance.some(a =>
+  a.memberId === memberId &&
+  a.date === new Date().toISOString().split("T")[0]
+);
 
+if (alreadyCheckedIn) {
+  $("#qrMemberMsg").textContent = "Présence déjà enregistrée aujourd’hui.";
+  return;
+}
   const attendanceData = {
     memberId: member.id,
     memberName: `${member.firstName} ${member.lastName}`,
