@@ -175,7 +175,7 @@ function applyRole(){
   if(pointageNav) pointageNav.classList.add("active");
   if(pointageView) pointageView.classList.add("active");
   if($("#title")) $("#title").textContent = "Pointage";
-}}
+}
 function renderStats(){
   const todayCount=state.attendance.filter(a=>a.date===today()).length;
   const cards=[
