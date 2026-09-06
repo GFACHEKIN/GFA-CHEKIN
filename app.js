@@ -276,7 +276,7 @@ function renderQrCourses(){
 let qrPointageActif = false;
 let qrSessionId = "";
 let qrToken = "";
-function renderAll(){renderStats();renderQrCourses();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();applyRole()}
+function renderAll(){applyRole();renderStats();renderQrCourses();renderToday();renderEvents();renderMembers();renderAttendance();renderGrades();renderCompetitions();renderRegistrations();}
 $$(".nav").forEach(b=>b.addEventListener("click",()=>{
   if(b.classList.contains("hidden")) return;
   $$(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");
