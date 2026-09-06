@@ -81,7 +81,7 @@ async function initFirebase(){
     authMod.onAuthStateChanged(state.auth, async user=>{
       if(user){
         state.user={name:user.email || "Coach principal"};
-        state.role = user.email === "baggfa93coach@gmail.com" ? "admin" : "coach";
+        state.role = user.email === "fightacademy9@gmail.com" ? "admin" : "coach";
         $("#loginView").classList.add("hidden");
         $("#connectionBadge").textContent="Firebase connecté";
         $("#connectionBadge").className="badge success";
@@ -159,8 +159,23 @@ function applyRole(){
   $$(".admin").forEach(el=>el.classList.toggle("hidden",state.role!=="admin"));
   $$(".coach").forEach(el=>el.classList.toggle("hidden",state.role==="member"));
   $("#userName").textContent=state.user.name;
-  $("#userRole").textContent=state.role==="admin"?"Administrateur":state.role==="assistant"?"Coach assistant":"Adhérent";
-}
+ $("#userRole").textContent = state.role === "admin" ? "Administrateur" : "Coach assistant";
+  }if(state.role === "coach"){
+  $$(".nav").forEach(el=>{
+    const autorise = el.dataset.view === "checkin" || el.dataset.view === "attendance";
+    el.classList.toggle("hidden", !autorise);
+  });
+
+  $$(".nav").forEach(el=>el.classList.remove("active"));
+  $$(".view").forEach(v=>v.classList.remove("active"));
+
+  const pointageNav = $('.nav[data-view="checkin"]');
+  const pointageView = $("#checkin");
+
+  if(pointageNav) pointageNav.classList.add("active");
+  if(pointageView) pointageView.classList.add("active");
+  if($("#title")) $("#title").textContent = "Pointage";
+}}
 function renderStats(){
   const todayCount=state.attendance.filter(a=>a.date===today()).length;
   const cards=[
