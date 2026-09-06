@@ -160,7 +160,7 @@ function applyRole(){
   $$(".coach").forEach(el=>el.classList.toggle("hidden",state.role==="member"));
   $("#userName").textContent=state.user.name;
  $("#userRole").textContent = state.role === "admin" ? "Administrateur" : "Coach assistant";
-  }if(state.role === "coach"){
+  if(state.role === "coach"){
   $$(".nav").forEach(el=>{
     const autorise = el.dataset.view === "checkin" || el.dataset.view === "attendance";
     el.classList.toggle("hidden", !autorise);
@@ -175,7 +175,7 @@ function applyRole(){
   if(pointageNav) pointageNav.classList.add("active");
   if(pointageView) pointageView.classList.add("active");
   if($("#title")) $("#title").textContent = "Pointage";
-}
+}}
 function renderStats(){
   const todayCount=state.attendance.filter(a=>a.date===today()).length;
   const cards=[
