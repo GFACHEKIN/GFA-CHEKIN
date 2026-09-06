@@ -81,7 +81,7 @@ async function initFirebase(){
     authMod.onAuthStateChanged(state.auth, async user=>{
       if(user){
         state.user={name:user.email || "Coach principal"};
-        state.role = user.email === "fightacademy9@gmail.com" ? "admin" : "coach";
+        state.role = user.email === "fightacademy93@gmail.com" ? "admin" : "coach";
         $("#loginView").classList.add("hidden");
         $("#connectionBadge").textContent="Firebase connecté";
         $("#connectionBadge").className="badge success";
