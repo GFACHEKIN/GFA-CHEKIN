@@ -127,21 +127,38 @@ if(qrMember){
 }
 async function loadCloudData(){
   if(state.mode!=="firebase") return;
+
   const {collection,getDocs,doc,setDoc}=state.fsMod;
-  const mem=await getDocs(collection(state.db,"members"));
-  const att=await getDocs(collection(state.db,"attendance"));
-  const cmp=await getDocs(collection(state.db,"competitions"));const reg = await getDocs(collection(state.db,"registrations"));
-  if(!mem.empty) state.members=mem.docs.map(d=>({id:d.id,...d.data()}));
-  for (const m of state.members) {
-  await setDoc(doc(state.db,"publicMembers",m.id),{
-    firstName:m.firstName || "",
-    lastName:m.lastName || "",
-    section:m.section || ""
-  });
-}
-  if(!att.empty) state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
-  if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));if(!reg.empty) 
-    state.registrations=reg.docs.map(d=>({id:d.id,...d.data()}));
+
+  if(state.role === "admin"){
+    const mem = await getDocs(collection(state.db,"members"));
+    const att = await getDocs(collection(state.db,"attendance"));
+    const cmp = await getDocs(collection(state.db,"competitions"));
+    const reg = await getDocs(collection(state.db,"registrations"));
+
+    if(!mem.empty) state.members=mem.docs.map(d=>({id:d.id,...d.data()}));
+
+    for(const m of state.members){
+      await setDoc(doc(state.db,"publicMembers",m.id),{
+        firstName:m.firstName || "",
+        lastName:m.lastName || "",
+        section:m.section || ""
+      });
+    }
+
+    if(!att.empty) state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
+    if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));
+    if(!reg.empty) state.registrations=reg.docs.map(d=>({id:d.id,...d.data()}));
+  } else {
+    const publicMem = await getDocs(collection(state.db,"publicMembers"));
+    const att = await getDocs(collection(state.db,"attendance"));
+
+    state.members=publicMem.docs.map(d=>({id:d.id,...d.data()}));
+    state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
+    state.competitions=[];
+    state.registrations=[];
+  }
+
   renderAll();
 }
 async function addCloud(collectionName,data){
