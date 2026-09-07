@@ -136,7 +136,7 @@ async function loadCloudData(){
     const cmp = await getDocs(collection(state.db,"competitions"));
     const reg = await getDocs(collection(state.db,"registrations"));
 
-    if(!mem.empty) state.members=mem.docs.map(d=>({id:d.id,...d.data()}));
+    state.members = mem.docs.map(d=>({id:d.id,...d.data()}));
 
     for(const m of state.members){
       await setDoc(doc(state.db,"publicMembers",m.id),{
@@ -146,9 +146,9 @@ async function loadCloudData(){
       });
     }
 
-    if(!att.empty) state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
-    if(!cmp.empty) state.competitions=cmp.docs.map(d=>({id:d.id,...d.data()}));
-    if(!reg.empty) state.registrations=reg.docs.map(d=>({id:d.id,...d.data()}));
+   state.attendance = att.docs.map(d=>({id:d.id,...d.data()}));
+state.competitions = cmp.docs.map(d=>({id:d.id,...d.data()}));
+state.registrations = reg.docs.map(d=>({id:d.id,...d.data()}));
   } else {
     const publicMem = await getDocs(collection(state.db,"publicMembers"));
     const att = await getDocs(collection(state.db,"attendance"));
