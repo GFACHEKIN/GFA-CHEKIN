@@ -410,7 +410,8 @@ selectedMemberId = null;
 $("#checkinClass").innerHTML=schedule.map(s=>`<option>${s}</option>`).join("");
 $("#checkinSubmit").addEventListener("click",async()=>{
   const memberName=$("#checkinMember").value.trim();
-  const m=state.members.find(x=>`${x.firstName} ${x.lastName}`.toLowerCase()===memberName.toLowerCase());
+  const normalize=s=>String(s||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ");
+const m=state.members.find(x=>normalize(`${x.firstName} ${x.lastName}`)===normalize(memberName)||normalize(`${x.lastName} ${x.firstName}`)===normalize(memberName));
 if(!m){$("#checkinMsg").textContent="Adhérent introuvable";$("#checkinMsg").className="message";return;}
   const id=m.id;
   if(state.attendance.some(a=>a.memberId===id&&a.date===today())){
