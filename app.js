@@ -242,7 +242,14 @@ function renderMembers(){
 }
 
 function renderAttendance(){
-$("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td></tr>`).join("");
+$("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td><td><button class="secondary admin attendance-delete" data-id="${a.id}">Supprimer</button></td></tr>`).join("");$$(".attendance-delete").forEach(btn=>btn.addEventListener("click",async()=>{
+  if(!confirm("Supprimer cette présence ?")) return;
+  const id=btn.dataset.id;
+  if(state.mode==="firebase") await deleteCloud("attendance",id);
+  state.attendance=state.attendance.filter(a=>a.id!==id);
+  saveLocal();
+  renderAttendance();
+}));
 }
 function renderGrades(){
 $("#gradesGrid").innerHTML=state.members.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes || 0}/4</span></div><button class="secondary grade-edit" data-id="${m.id}">Modifier le grade</button></div>`).join("");
