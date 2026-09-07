@@ -409,8 +409,10 @@ selectedMemberId = null;
 
 $("#checkinClass").innerHTML=schedule.map(s=>`<option>${s}</option>`).join("");
 $("#checkinSubmit").addEventListener("click",async()=>{
-  const id=$("#checkinMember").value, m=state.members.find(x=>x.id===id);
-  if(!m) return;
+  const memberName=$("#checkinMember").value.trim();
+  const m=state.members.find(x=>`${x.firstName} ${x.lastName}`.toLowerCase()===memberName.toLowerCase());
+if(!m){$("#checkinMsg").textContent="Adhérent introuvable";$("#checkinMsg").className="message";return;}
+  const id=m.id;
   if(state.attendance.some(a=>a.memberId===id&&a.date===today())){
     $("#checkinMsg").textContent="Présence déjà enregistrée aujourd’hui."; $("#checkinMsg").className="message"; return;
   }
