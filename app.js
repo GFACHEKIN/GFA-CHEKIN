@@ -55,7 +55,7 @@ const saveLocal=()=>{
   localStorage.setItem("gfa_v2_attendance",JSON.stringify(state.attendance));
   localStorage.setItem("gfa_v2_competitions",JSON.stringify(state.competitions));
 };
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>new Intl.DateTimeFormat("fr-CA",{timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
 const fmt=d=>new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium"}).format(new Date(d));
 
 async function initFirebase(){
