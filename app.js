@@ -267,6 +267,15 @@ $$(".grade-edit").forEach(btn=>btn.addEventListener("click",()=>{
   form.elements["section"].value=member.section || "Adultes";
   form.elements["belt"].value=member.belt || "Blanche";
   form.elements["stripes"].value=member.stripes || 0;
+  form.elements["gradeDateBlanche"].value = member.gradeDateBlanche || "";
+form.elements["gradeDateGrise"].value = member.gradeDateGrise || "";
+form.elements["gradeDateJaune"].value = member.gradeDateJaune || "";
+form.elements["gradeDateOrange"].value = member.gradeDateOrange || "";
+form.elements["gradeDateVerte"].value = member.gradeDateVerte || "";
+form.elements["gradeDateBleue"].value = member.gradeDateBleue || "";
+form.elements["gradeDateViolette"].value = member.gradeDateViolette || "";
+form.elements["gradeDateMarron"].value = member.gradeDateMarron || "";
+form.elements["gradeDateNoire"].value = member.gradeDateNoire || "";
   form.elements["phone"].value=member.phone || "";
   form.elements["email"].value=member.email || "";
   form.elements["address"].value=member.address || "";
