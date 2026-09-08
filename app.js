@@ -242,7 +242,7 @@ function renderMembers(){
 }
 
 function renderAttendance(){
-$("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td><td><button class="secondary admin attendance-delete" data-id="${a.id}">Supprimer</button></td></tr>`).join("");$$(".attendance-delete").forEach(btn=>btn.addEventListener("click",async()=>{
+$("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td><td><button class="secondary attendance-delete" data-id="${a.id}">Supprimer</button></td></tr>`).join("");$$(".attendance-delete").forEach(btn=>btn.addEventListener("click",async()=>{
   if(!confirm("Supprimer cette présence ?")) return;
   const id=btn.dataset.id;
   if(state.mode==="firebase") await deleteCloud("attendance",id);
