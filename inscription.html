@@ -117,7 +117,36 @@ Téléphone urgence
       <option value="Kids / Ados">Kids / Ados</option>
       <option value="100% Women">100% Women</option>
     </select>
+<div id="reglementBloc" style="display:none; margin-top:20px; padding:18px; border:1px solid #2a2a2a; border-radius:12px;">
 
+  <h3>Règlement intérieur</h3>
+
+  <p>
+    <a id="reglementLien" href="#" target="_blank" style="color:#ff3b30; font-weight:bold;">
+      Consulter le règlement intérieur
+    </a>
+  </p>
+
+  <label style="display:flex; gap:10px; align-items:flex-start;">
+    <input type="checkbox" id="reglementAccepte">
+    <span>J’ai lu et j’accepte le règlement intérieur.</span>
+  </label>
+
+  <label>Mention obligatoire *</label>
+  <input
+    type="text"
+    id="mentionReglement"
+    placeholder="Écrire : Lu et approuvé"
+  >
+
+  <label>Signature *</label>
+  <input
+    type="text"
+    id="signatureReglement"
+    placeholder="Nom et prénom"
+  >
+
+</div>
     <label>Téléphone *</label>
     <input type="tel" name="phone" required>
 
@@ -200,6 +229,47 @@ delete data.medicalCertificate;
   } finally {
     button.disabled = false;
     button.textContent = "Envoyer mon inscription";
+  }
+});
+</script><script>
+  const sectionSelect = document.querySelector('select[name="section"]');
+  const reglementBloc = document.getElementById('reglementBloc');
+  const reglementLien = document.getElementById('reglementLien');
+const reglementAccepte = document.getElementById('reglementAccepte');
+const mentionReglement = document.getElementById('mentionReglement');
+const signatureReglement = document.getElementById('signatureReglement');
+  sectionSelect.addEventListener('change', function () {
+    const section = this.value;
+
+    if (section === 'Adultes' || section === '100% Women') {
+      reglementBloc.style.display = 'block';
+      reglementAccepte.required = true;
+mentionReglement.required = true;
+signatureReglement.required = true;
+
+      if (section === 'Adultes') {
+        reglementLien.href = 'RÈGLEMENT INTÉRIEUR ADULTES GROUP FIGHT ACADEMY..pdf';
+      }
+
+      if (section === '100% Women') {
+        reglementLien.href = '#';
+      }
+
+    } else {
+      reglementBloc.style.display = 'none';
+      reglementAccepte.required = false;
+mentionReglement.required = false;
+signatureReglement.required = false;
+    mentionReglement.setCustomValidity('');
+}
+  });
+  mentionReglement.addEventListener('input', function () {
+  const texte = this.value.trim().toLowerCase();
+
+  if (texte === 'lu et approuvé' || texte === 'lu et approuve') {
+    this.setCustomValidity('');
+  } else {
+    this.setCustomValidity('Veuillez écrire : Lu et approuvé');
   }
 });
 </script>
