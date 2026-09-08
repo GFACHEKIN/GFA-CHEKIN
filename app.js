@@ -252,7 +252,34 @@ $("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<t
 }));
 }
 function renderGrades(){
-$("#gradesGrid").innerHTML=state.members.map(m=>`<div class="member-card"><h4>${m.firstName} ${m.lastName}</h4><p>${m.section}</p><div class="belt belt-${m.belt}"></div><div class="meta"><span>${m.belt}</span><span>${m.stripes || 0}/4</span></div><button class="secondary grade-edit" data-id="${m.id}">Modifier le grade</button></div>`).join("");
+$("#gradesGrid").innerHTML = state.members.map(m => `
+  <div class="member-card">
+    <h4>${m.firstName} ${m.lastName}</h4>
+    <p>${m.section}</p>
+
+    <div class="belt belt-${m.belt}">
+      <span class="meta">
+        <span>${m.belt}</span>
+        <span>${m.stripes || 0}/4</span>
+      </span>
+    </div>
+
+    <p><strong>Dates de remise :</strong></p>
+    ${m.gradeDateBlanche ? `<p>⚪ Blanche : ${fmt(m.gradeDateBlanche)}</p>` : ""}
+    ${m.gradeDateGrise ? `<p>⚪ Grise : ${fmt(m.gradeDateGrise)}</p>` : ""}
+    ${m.gradeDateJaune ? `<p>🟡 Jaune : ${fmt(m.gradeDateJaune)}</p>` : ""}
+    ${m.gradeDateOrange ? `<p>🟠 Orange : ${fmt(m.gradeDateOrange)}</p>` : ""}
+    ${m.gradeDateVerte ? `<p>🟢 Verte : ${fmt(m.gradeDateVerte)}</p>` : ""}
+    ${m.gradeDateBleue ? `<p>🔵 Bleue : ${fmt(m.gradeDateBleue)}</p>` : ""}
+    ${m.gradeDateViolette ? `<p>🟣 Violette : ${fmt(m.gradeDateViolette)}</p>` : ""}
+    ${m.gradeDateMarron ? `<p>🟤 Marron : ${fmt(m.gradeDateMarron)}</p>` : ""}
+    ${m.gradeDateNoire ? `<p>⚫ Noire : ${fmt(m.gradeDateNoire)}</p>` : ""}
+
+    <button class="secondary grade-edit" data-id="${m.id}">
+      Modifier le grade
+    </button>
+  </div>
+`).join("");
 $$(".grade-edit").forEach(btn=>btn.addEventListener("click",()=>{
   const member=state.members.find(m=>m.id===btn.dataset.id);
   if(!member) return;
