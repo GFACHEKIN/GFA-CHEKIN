@@ -298,6 +298,13 @@ function renderCompetitions(){
       <p><strong>Adresse :</strong> ${r.address || ""}</p>
       <p><strong>Urgence :</strong> ${r.emergency || ""}</p>
       <p><strong>Tél. urgence :</strong> ${r.emergencyPhone || ""}</p>
+      <p><strong>Droit à l'image :</strong> ${
+  r.imageRights === "oui"
+    ? "✅ Oui, autorisé"
+    : r.imageRights === "non"
+      ? "❌ Non, refusé"
+      : "Non renseigné"
+}</p>
       <div class="toolbar">
        <button type="button" class="primary" data-accept-registration="${r.id}">Accepter</button>
 <button type="button" class="secondary" data-reject-registration="${r.id}">Refuser</button>
