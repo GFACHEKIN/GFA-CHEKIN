@@ -543,7 +543,13 @@ $("#addCompetitionBtn").addEventListener("click",async()=>{
 });
 
 $("#exportBtn").addEventListener("click",()=>{
-  const rows=[["Date","Nom","Section","Cours"],...state.attendance.map(a=>[a.date,a.name,a.section,a.className])];
+  const rows=[["Date","Prénom","Nom","Section","Cours"],...state.attendance.map(a=>{
+  const m=state.members.find(m=>m.id===a.memberId);
+  const fullName=(a.name||"").trim().split(/\s+/);
+  const firstName=m?.firstName || fullName[0] || "";
+  const lastName=m?.lastName || fullName.slice(1).join(" ") || "";
+  return [a.date,firstName,lastName,a.section,a.className];
+})];
   const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(";")).join("\n");
   const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=u;a.download="gfa-presences.csv";a.click();URL.revokeObjectURL(u);
