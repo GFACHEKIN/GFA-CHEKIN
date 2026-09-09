@@ -29,7 +29,7 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
 }
 
 .belt-knot{
-  --belt-color:#ffffff;
+  
   position:relative;
   height:12px;
   width:100%;
