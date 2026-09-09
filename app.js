@@ -101,11 +101,44 @@ async function initFirebase(){
    
     const qrMember = $("#qrMember");
 
-if(qrMember){
-  qrMember.innerHTML = `
-    <option value="">Tapez votre nom pour vous rechercher</option>
-  `;
-}
+const {collection,getDocs}=state.fsMod;
+const publicMem = await getDocs(collection(state.db,"publicMembers"));
+state.members = publicMem.docs.map(d=>({id:d.id,...d.data()}));
+
+state.qrSelectedMemberId = "";
+
+qrMember.addEventListener("input", () => {
+  const recherche = qrMember.value.trim().toLowerCase();
+  state.qrSelectedMemberId = "";
+
+  if(recherche.length < 2){
+    $("#qrMemberMsg").innerHTML = "";
+    return;
+  }
+
+  const resultats = state.members
+    .filter(m => (m.lastName || "").toLowerCase().startsWith(recherche))
+    .slice(0,5);
+
+  if(resultats.length === 0){
+    $("#qrMemberMsg").innerHTML = "Aucun adhérent trouvé";
+    return;
+  }
+
+  $("#qrMemberMsg").innerHTML = resultats.map(m =>
+    `<button type="button" class="qr-result" data-id="${m.id}" data-name="${m.lastName} ${m.firstName}">
+      ${m.lastName} ${m.firstName}
+    </button>`
+  ).join("");
+
+  document.querySelectorAll(".qr-result").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.qrSelectedMemberId = btn.dataset.id;
+      qrMember.value = btn.dataset.name;
+      $("#qrMemberMsg").innerHTML = "✅ Adhérent sélectionné";
+    });
+  });
+});
   }else{
     $("#loginView").classList.remove("hidden");
     $("#connectionBadge").textContent="Connexion requise";
@@ -661,14 +694,14 @@ if (qrCheckinToken) {
 
     $("#title").textContent = "Pointage adhérent";
 
-    $("#qrMember").innerHTML = state.members
-      .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
-      .join("");
-  }
+   
 }$("#qrMemberSubmit")?.addEventListener("click", async () => {
-  const memberId = $("#qrMember").value;
+  const memberId = state.qrSelectedMemberId;
   const member = state.members.find(m => m.id === memberId);
-
+if (!memberId) {
+  $("#qrMemberMsg").textContent = "Sélectionne ton nom dans les résultats proposés.";
+  return;
+}
   if (!member) {
     $("#qrMemberMsg").textContent = "Adhérent introuvable.";
     return;
