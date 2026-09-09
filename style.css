@@ -12,18 +12,18 @@ label{display:block;font-size:11px;color:#b7bdc8;font-weight:800;margin:13px 0 6
 dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;background:#101319;color:#fff;padding:0}dialog::backdrop{background:rgba(0,0,0,.75)}#memberForm{padding:20px}.modal-head,.actions{display:flex;justify-content:space-between;align-items:center}.modal-head button{background:#242934;color:#fff;border:0;border-radius:10px;padding:8px}.actions{justify-content:flex-end;gap:10px;margin-top:16px}
 @media(max-width:950px){#app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.sidebar nav{display:flex;overflow:auto}.nav{white-space:nowrap;width:auto}.sidebar-bottom{display:flex;align-items:center;gap:10px;margin-top:12px}.ghost{width:auto}.grid.four,.grid.three{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){main{padding:14px}.grid.two,.grid.three,.grid.four,.toolbar{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:24px}.hero-icon{font-size:48px}.event{grid-template-columns:1fr}.userbox{display:none}}
-/* ===== CEINTURES NOUEES - GRADES ===== */
+/* ===== GRADES - VERSION PROPRE ===== */
 
 .grade-belt-wrap{
   margin-top:10px;
-  margin-bottom:16px;
+  margin-bottom:14px;
 }
 
 .grade-belt-title{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:8px;
+  margin-bottom:6px;
   font-size:13px;
   color:#cbd5e1;
 }
@@ -31,81 +31,72 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
 .belt-knot{
   --belt-color:#ffffff;
   position:relative;
+  height:12px;
   width:100%;
-  height:44px;
   border-radius:6px;
   background:var(--belt-color);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -3px 0 rgba(0,0,0,.18),
-    0 6px 14px rgba(0,0,0,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
 }
+
+/* petit noeud à droite */
 
 .belt-knot-center{
   position:absolute;
-  left:41%;
-  top:-7px;
-  width:48px;
-  height:56px;
+  right:28px;
+  top:-8px;
+  width:24px;
+  height:28px;
   background:var(--belt-color);
-  border-radius:9px 13px 9px 13px;
+  border-radius:5px;
   transform:rotate(38deg);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.16),
-    0 4px 8px rgba(0,0,0,.35);
-  z-index:4;
+  box-shadow:0 2px 5px rgba(0,0,0,.35);
+  z-index:3;
 }
 
 .belt-tail{
   position:absolute;
-  top:25px;
-  width:62px;
-  height:23px;
+  right:17px;
+  top:5px;
+  width:30px;
+  height:10px;
   background:var(--belt-color);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
-  z-index:3;
+  z-index:2;
 }
 
 .belt-tail-left{
-  left:36%;
-  transform:rotate(34deg);
+  transform:rotate(32deg);
 }
 
 .belt-tail-right{
-  left:45%;
-  transform:rotate(-31deg);
+  right:6px;
+  transform:rotate(-28deg);
 }
+
+/* barrettes */
 
 .belt-rank-panel{
   position:absolute;
-  right:14px;
-  top:5px;
-  width:112px;
-  height:34px;
-  background:#101010;
-  border-radius:4px;
+  right:72px;
+  top:-24px;
   display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  z-index:5;
+  gap:5px;
+  z-index:4;
 }
 
 .belt-stripe{
-  width:8px;
-  height:26px;
+  width:12px;
+  height:8px;
   border:1px solid #64748b;
-  border-radius:1px;
+  border-radius:2px;
   background:transparent;
 }
 
 .belt-stripe.active{
   background:#fff;
   border-color:#fff;
-  box-shadow:0 0 5px rgba(255,255,255,.65);
 }
 
-/* Couleurs de grades */
+/* couleurs */
 
 .belt-Blanche{ --belt-color:#eeeeee; }
 .belt-Grise{ --belt-color:#8c8c8c; }
@@ -118,20 +109,11 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
 .belt-Noire{ --belt-color:#111111; }
 
 @media(max-width:650px){
-  .belt-knot-center{
-    left:38%;
-  }
-
-  .belt-tail-left{
-    left:32%;
-  }
-
-  .belt-tail-right{
-    left:42%;
-  }
-
   .belt-rank-panel{
-    width:94px;
-    right:8px;
+    right:64px;
+  }
+
+  .belt-knot-center{
+    right:22px;
   }
 }
