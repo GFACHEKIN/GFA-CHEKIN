@@ -13,17 +13,15 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
 @media(max-width:950px){#app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.sidebar nav{display:flex;overflow:auto}.nav{white-space:nowrap;width:auto}.sidebar-bottom{display:flex;align-items:center;gap:10px;margin-top:12px}.ghost{width:auto}.grid.four,.grid.three{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){main{padding:14px}.grid.two,.grid.three,.grid.four,.toolbar{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:24px}.hero-icon{font-size:48px}.event{grid-template-columns:1fr}.userbox{display:none}}
 #gradesGrid .belt{
-  margin-top:28px;
+  margin-top:10px;
   margin-bottom:12px;
+  height:14px;
   position:relative;
 }
 
 #gradesGrid .belt .meta{
-  position:absolute;
-  bottom:100%;
-  left:0;
-  right:0;
-  margin-bottom:6px;
+  position:relative;
+  top:-22px;
   display:flex;
   justify-content:space-between;
   align-items:center;
