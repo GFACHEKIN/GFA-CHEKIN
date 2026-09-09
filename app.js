@@ -98,7 +98,9 @@ async function initFirebase(){
 
   if(isQrCheckin){
     $("#loginView").classList.add("hidden");
-   
+     document.querySelectorAll("nav, .sidebar, .menu, .topbar").forEach(el => {
+    el.style.display = "none";
+  });
     const qrMember = $("#qrMember");
 
 const {collection,getDocs}=state.fsMod;
