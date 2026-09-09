@@ -98,15 +98,13 @@ async function initFirebase(){
 
   if(isQrCheckin){
     $("#loginView").classList.add("hidden");
-    const {collection,getDocs}=state.fsMod;
-const publicMem = await getDocs(collection(state.db,"publicMembers"));
-state.members = publicMem.docs.map(d=>({id:d.id,...d.data()}));
+   
+    const qrMember = $("#qrMember");
 
-const qrMember = $("#qrMember");
 if(qrMember){
-  qrMember.innerHTML = state.members
-    .map(m => `<option value="${m.id}">${m.firstName} ${m.lastName}</option>`)
-    .join("");
+  qrMember.innerHTML = `
+    <option value="">Tapez votre nom pour vous rechercher</option>
+  `;
 }
   }else{
     $("#loginView").classList.remove("hidden");
