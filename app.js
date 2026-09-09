@@ -741,6 +741,7 @@ if (alreadyCheckedIn) {
       "Impossible d'enregistrer la présence.";
   }
 });
+  }
 initFirebase().then(ok => {
   if (!ok) renderAll();
 });
