@@ -12,3 +12,20 @@ label{display:block;font-size:11px;color:#b7bdc8;font-weight:800;margin:13px 0 6
 dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;background:#101319;color:#fff;padding:0}dialog::backdrop{background:rgba(0,0,0,.75)}#memberForm{padding:20px}.modal-head,.actions{display:flex;justify-content:space-between;align-items:center}.modal-head button{background:#242934;color:#fff;border:0;border-radius:10px;padding:8px}.actions{justify-content:flex-end;gap:10px;margin-top:16px}
 @media(max-width:950px){#app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.sidebar nav{display:flex;overflow:auto}.nav{white-space:nowrap;width:auto}.sidebar-bottom{display:flex;align-items:center;gap:10px;margin-top:12px}.ghost{width:auto}.grid.four,.grid.three{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){main{padding:14px}.grid.two,.grid.three,.grid.four,.toolbar{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:24px}.hero-icon{font-size:48px}.event{grid-template-columns:1fr}.userbox{display:none}}
+#gradesGrid .belt{
+  margin-top:12px;
+  margin-bottom:12px;
+  height:14px;
+  position:relative;
+}
+
+#gradesGrid .belt .meta{
+  position:absolute;
+  top:-22px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:2;
+}
