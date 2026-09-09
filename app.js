@@ -56,7 +56,12 @@ const saveLocal=()=>{
   localStorage.setItem("gfa_v2_competitions",JSON.stringify(state.competitions));
 };
 const today=()=>new Intl.DateTimeFormat("fr-CA",{timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
-const fmt=d=>new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium"}).format(new Date(d));
+const fmt=d=>{
+  if(!d) return "";
+  const date = d?.toDate ? d.toDate() : new Date(d);
+  if(isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("fr-FR",{dateStyle:"medium"}).format(date);
+};
 
 async function initFirebase(){
   if(!state.firebaseConfig?.apiKey || !state.firebaseConfig?.projectId) {
