@@ -284,6 +284,27 @@ $("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<t
   renderAttendance();
 }));
 }
+setInterval(async () => {
+  
+  if (state.mode !== "firebase") return;
+
+  const attendanceView = $("#attendance");
+  if (!attendanceView || !attendanceView.classList.contains("active")) return;
+
+  try {
+    const { collection, getDocs } = state.fsMod;
+    const snap = await getDocs(collection(state.db, "attendance"));
+
+    state.attendance = snap.docs.map(d => ({
+      id: d.id,
+      ...d.data()
+    }));
+
+    renderAttendance();
+  } catch (e) {
+    console.error("Actualisation présences :", e);
+  }
+}, 5000);
 function renderGrades(){
 $("#gradesGrid").innerHTML = state.members.map(m => `
   <div class="member-card">
