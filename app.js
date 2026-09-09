@@ -742,6 +742,8 @@ if (alreadyCheckedIn) {
     memberId: member.id,
     memberName: `${member.firstName} ${member.lastName}`,
     date: new Date().toISOString(),
+    section: member.section || "",
+className: member.className || member.section || "",
     method: "QR",
     token: qrCheckinToken
   };
