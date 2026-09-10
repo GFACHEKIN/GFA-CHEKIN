@@ -316,23 +316,19 @@ $("#gradesGrid").innerHTML = state.members.map(m => `
     <h4>${m.firstName} ${m.lastName}</h4>
     <p>${m.section}</p>
 
-   <div class="grade-belt-wrap belt-${m.belt}">
+  <div class="grade-belt-wrap belt-${m.belt}">
   <div class="grade-belt-title">
     <span>${m.belt}</span>
     <span>${m.stripes || 0}/4</span>
   </div>
 
-  <div class="belt-knot">
-    <div class="belt-knot-center"></div>
-    <div class="belt-tail belt-tail-left"></div>
-    <div class="belt-tail belt-tail-right"></div>
-
-    <div class="belt-rank-panel">
-      ${[0,1,2,3].map(i => `
-        <span class="belt-stripe ${i < (m.stripes || 0) ? "active" : ""}"></span>
-      `).join("")}
-    </div>
+  <div class="grade-stripes">
+    ${[0,1,2,3].map(i => `
+      <span class="grade-stripe ${i < (m.stripes || 0) ? "active" : ""}"></span>
+    `).join("")}
   </div>
+
+  <div class="grade-belt-bar"></div>
 </div>
 
     <p><strong>Dates de remise :</strong></p>
