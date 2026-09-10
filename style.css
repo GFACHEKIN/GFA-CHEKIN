@@ -12,10 +12,10 @@ label{display:block;font-size:11px;color:#b7bdc8;font-weight:800;margin:13px 0 6
 dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;background:#101319;color:#fff;padding:0}dialog::backdrop{background:rgba(0,0,0,.75)}#memberForm{padding:20px}.modal-head,.actions{display:flex;justify-content:space-between;align-items:center}.modal-head button{background:#242934;color:#fff;border:0;border-radius:10px;padding:8px}.actions{justify-content:flex-end;gap:10px;margin-top:16px}
 @media(max-width:950px){#app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.sidebar nav{display:flex;overflow:auto}.nav{white-space:nowrap;width:auto}.sidebar-bottom{display:flex;align-items:center;gap:10px;margin-top:12px}.ghost{width:auto}.grid.four,.grid.three{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){main{padding:14px}.grid.two,.grid.three,.grid.four,.toolbar{grid-template-columns:1fr}.hero{padding:20px}.hero h2{font-size:24px}.hero-icon{font-size:48px}.event{grid-template-columns:1fr}.userbox{display:none}}
-/* ===== GRADES - VERSION PROPRE ===== */
+/* ===== GRADES - BARRE SIMPLE ===== */
 
 .grade-belt-wrap{
-  margin-top:10px;
+  margin-top:8px;
   margin-bottom:14px;
 }
 
@@ -28,75 +28,36 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
   color:#cbd5e1;
 }
 
-.belt-knot{
-  
-  position:relative;
-  height:12px;
-  width:100%;
-  border-radius:6px;
-  background:var(--belt-color);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
-}
-
-/* petit noeud à droite */
-
-.belt-knot-center{
-  position:absolute;
-  right:28px;
-  top:-8px;
-  width:24px;
-  height:28px;
-  background:var(--belt-color);
-  border-radius:5px;
-  transform:rotate(38deg);
-  box-shadow:0 2px 5px rgba(0,0,0,.35);
-  z-index:3;
-}
-
-.belt-tail{
-  position:absolute;
-  right:17px;
-  top:5px;
-  width:30px;
-  height:10px;
-  background:var(--belt-color);
-  z-index:2;
-}
-
-.belt-tail-left{
-  transform:rotate(32deg);
-}
-
-.belt-tail-right{
-  right:6px;
-  transform:rotate(-28deg);
-}
-
-/* barrettes */
-
-.belt-rank-panel{
-  position:absolute;
-  right:72px;
-  top:-24px;
+.grade-stripes{
   display:flex;
+  justify-content:flex-end;
   gap:5px;
-  z-index:4;
+  margin-bottom:6px;
+  padding-right:82px;
 }
 
-.belt-stripe{
-  width:12px;
+.grade-stripe{
+  width:14px;
   height:8px;
   border:1px solid #64748b;
   border-radius:2px;
   background:transparent;
 }
 
-.belt-stripe.active{
+.grade-stripe.active{
   background:#fff;
   border-color:#fff;
 }
 
-/* couleurs */
+.grade-belt-bar{
+  --belt-color:#fff;
+  width:100%;
+  height:12px;
+  border-radius:6px;
+  background:var(--belt-color);
+}
+
+/* Couleurs */
 
 .belt-Blanche{ --belt-color:#eeeeee; }
 .belt-Grise{ --belt-color:#8c8c8c; }
@@ -106,14 +67,14 @@ dialog{width:min(760px,92vw);border:1px solid #303642;border-radius:20px;backgro
 .belt-Bleue{ --belt-color:#1769e0; }
 .belt-Violette{ --belt-color:#8e2bc1; }
 .belt-Marron{ --belt-color:#784421; }
-.belt-Noire{ --belt-color:#111111; }
+.belt-Noire{ --belt-color:#222; }
 
-@media(max-width:650px){
-  .belt-rank-panel{
-    right:64px;
-  }
-
-  .belt-knot-center{
-    right:22px;
-  }
-}
+.grade-belt-wrap.belt-Blanche .grade-belt-bar{background:#eeeeee;}
+.grade-belt-wrap.belt-Grise .grade-belt-bar{background:#8c8c8c;}
+.grade-belt-wrap.belt-Jaune .grade-belt-bar{background:#facc15;}
+.grade-belt-wrap.belt-Orange .grade-belt-bar{background:#f97316;}
+.grade-belt-wrap.belt-Verte .grade-belt-bar{background:#16a34a;}
+.grade-belt-wrap.belt-Bleue .grade-belt-bar{background:#1769e0;}
+.grade-belt-wrap.belt-Violette .grade-belt-bar{background:#8e2bc1;}
+.grade-belt-wrap.belt-Marron .grade-belt-bar{background:#784421;}
+.grade-belt-wrap.belt-Noire .grade-belt-bar{background:#222;}
