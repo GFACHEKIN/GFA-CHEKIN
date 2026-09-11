@@ -358,6 +358,7 @@ $$(".grade-edit").forEach(btn=>btn.addEventListener("click",()=>{
   form.elements["lastName"].value=member.lastName || "";
   form.elements["birthDate"].value=member.birthDate || "";
   form.elements["medicalCertificateReceived"].checked=!!member.medicalCertificateReceived;
+  form.elements["cfjjbLicense"].checked=!!member.cfjjbLicense;
   form.elements["section"].value=member.section || "Adultes";
   form.elements["belt"].value=member.belt || "Blanche";
   form.elements["stripes"].value=member.stripes || 0;
@@ -484,6 +485,7 @@ $("#memberForm").addEventListener("submit",async e=>{
     delete data.medicalCertificate;
     data.medicalCertificateReceived = e.target.elements["medicalCertificateReceived"].checked;
     data.stripes=Number(data.stripes||0);
+    data.cfjjbLicense = e.target.elements["cfjjbLicense"].checked;
    const localId=crypto.randomUUID();
 
 if(state.mode==="firebase"){
