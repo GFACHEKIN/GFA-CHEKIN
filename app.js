@@ -304,12 +304,20 @@ function renderAttendanceDashboard(){
         { sensitivity: "base" }
       )
     )
-    .filter(m => {
-      const fullName =
-        `${m.firstName || ""} ${m.lastName || ""}`.toLowerCase();
+.filter(m => {
+  const firstName = (m.firstName || "").toLowerCase();
+  const lastName = (m.lastName || "").toLowerCase();
 
-      return fullName.includes(query);
-    });
+  const prenomNom = `${firstName} ${lastName}`;
+  const nomPrenom = `${lastName} ${firstName}`;
+
+  return (
+    prenomNom.includes(query) ||
+    nomPrenom.includes(query) ||
+    firstName.includes(query) ||
+    lastName.includes(query)
+  );
+});
 
   grid.innerHTML = members.map(m => {
 
