@@ -332,7 +332,7 @@ function renderAttendanceDashboard(){
     const last = attendances[0];
 
     return `
-      <div class="card member-card">
+      <div class="card member-card" data-member-id="${m.id}" style="cursor:pointer;">
         <h3>${m.lastName || ""} ${m.firstName || ""}</h3>
 
         <p><strong>Présences :</strong> ${total}</p>
