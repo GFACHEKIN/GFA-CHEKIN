@@ -393,7 +393,9 @@ function renderCompetitions(){
     return;
   }
 
-  grid.innerHTML = list.map(r => `
+  grid.innerHTML = [...list]
+  .sort((a, b) => (a.lastName || "").localeCompare(b.lastName || "", "fr", { sensitivity: "base" }))
+  .map(r => `
     <div class="member-card">
       <h4>${r.firstName || ""} ${r.lastName || ""}</h4>
       <p>${r.section || ""}</p>
