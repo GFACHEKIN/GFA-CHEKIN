@@ -289,130 +289,74 @@ function renderMembers(){
 
 
 function renderAttendanceDashboard(){
-  const select = $("#attendanceMemberSelect");
-  if(!select) return;
+  const grid = $("#attendanceDashboardGrid");
+  const search = $("#attendanceDashboardSearch");
 
-  const currentValue = select.value;
+  if(!grid) return;
 
-  const members = [...state.members].sort((a,b) =>
-    (a.lastName || "").localeCompare(
-      b.lastName || "",
-      "fr",
-      { sensitivity: "base" }
+  const query = (search?.value || "").trim().toLowerCase();
+
+  const members = [...state.members]
+    .sort((a,b) =>
+      (a.lastName || "").localeCompare(
+        b.lastName || "",
+        "fr",
+        { sensitivity: "base" }
+      )
     )
-  );
+    .filter(m => {
+      const fullName =
+        `${m.firstName || ""} ${m.lastName || ""}`.toLowerCase();
 
-  select.innerHTML =
-    `<option value="">Sélectionner un adhérent</option>` +
-    members.map(m =>
-      `<option value="${m.id}">${m.firstName || ""} ${m.lastName || ""}</option>`
-    ).join("");
-
-  if(currentValue && members.some(m => m.id === currentValue)){
-    select.value = currentValue;
-  }
-
-  function showMember(){
-    const memberId = select.value;
-
-    if(!memberId){
-      $("#individualAttendanceTotal").textContent = "0";
-      $("#individualLastAttendance").textContent = "-";
-      $("#individualMemberSection").textContent = "-";
-      $("#individualMonthlyAttendance").innerHTML = "";
-      $("#individualAttendanceHistory").innerHTML = "";
-      return;
-    }
-
-    const member = state.members.find(m => m.id === memberId);
-    if(!member) return;
-
-    const fullName =
-      `${member.firstName || ""} ${member.lastName || ""}`
-        .trim()
-        .toLowerCase();
-
-    const records = state.attendance
-      .filter(a => {
-        const attendanceName =
-          (a.memberName || a.name || "")
-            .trim()
-            .toLowerCase();
-
-        return a.memberId === member.id || attendanceName === fullName;
-      })
-      .sort((a,b) =>
-        (b.date || "").localeCompare(a.date || "")
-      );
-
-    $("#individualAttendanceTotal").textContent = records.length;
-
-    $("#individualLastAttendance").textContent =
-      records.length && records[0].date
-        ? fmt(records[0].date)
-        : "-";
-
-    $("#individualMemberSection").textContent =
-      member.section || "-";
-
-    const monthly = {};
-
-    records.forEach(a => {
-      if(!a.date) return;
-
-      const month = a.date.slice(0,7);
-      monthly[month] = (monthly[month] || 0) + 1;
+      return fullName.includes(query);
     });
 
-    $("#individualMonthlyAttendance").innerHTML =
-      Object.keys(monthly)
-        .sort()
-        .reverse()
-        .map(month => {
-          const [year, monthNumber] = month.split("-");
+  grid.innerHTML = members.map(m => {
 
-          const monthName = new Date(
-            Number(year),
-            Number(monthNumber) - 1,
-            1
-          ).toLocaleDateString("fr-FR", {
-            month: "long",
-            year: "numeric"
-          });
+    const attendances = state.attendance
+      .filter(a =>
+        a.memberId === m.id ||
+        a.memberName === `${m.firstName || ""} ${m.lastName || ""}`
+      )
+      .sort((a,b) => new Date(b.date) - new Date(a.date));
 
-          return `
-            <div class="list-item">
-              <strong>${monthName}</strong>
-              <span>${monthly[month]} présence(s)</span>
-            </div>
-          `;
-        })
-        .join("");
+    const total = attendances.length;
+    const last = attendances[0];
 
-    $("#individualAttendanceHistory").innerHTML =
-      records.length
-        ? records.map(a => `
-            <tr>
-              <td>${a.date ? fmt(a.date) : ""}</td>
-              <td>${a.className || ""}</td>
-              <td>${a.section || member.section || ""}</td>
-            </tr>
-          `).join("")
-        : `
-            <tr>
-              <td colspan="3">Aucune présence enregistrée</td>
-            </tr>
-          `;
+    return `
+      <div class="card member-card">
+        <h3>${m.lastName || ""} ${m.firstName || ""}</h3>
+
+        <p><strong>Présences :</strong> ${total}</p>
+
+        <p>
+          <strong>Dernière présence :</strong>
+          ${last ? fmt(last.date) : "Aucune"}
+        </p>
+
+        <p>
+          <strong>Dernière séance :</strong>
+          ${last?.course || last?.className || last?.session || "Non renseignée"}
+        </p>
+      </div>
+    `;
+  }).join("");
+
+  if(!members.length){
+    grid.innerHTML = `
+      <div class="card">
+        Aucun adhérent trouvé.
+      </div>
+    `;
   }
 
-  select.onchange = showMember;
-
-  if(select.value){
-    showMember();
+  if(search && !search.dataset.listenerAdded){
+    search.addEventListener("input", renderAttendanceDashboard);
+    search.dataset.listenerAdded = "true";
   }
 }
-function renderAttendance(){
-  renderAttendanceDashboard();
+  function renderAttendance(){
+renderAttendanceDashboard();
 $("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td><td><button class="secondary attendance-delete" data-id="${a.id}">Supprimer</button></td></tr>`).join("");$$(".attendance-delete").forEach(btn=>btn.addEventListener("click",async()=>{
   if(!confirm("Supprimer cette présence ?")) return;
   const id=btn.dataset.id;
