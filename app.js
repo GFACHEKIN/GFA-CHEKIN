@@ -253,9 +253,17 @@ function renderMembers(){
   const q = $("#memberSearch").value.toLowerCase();
   const f = $("#memberSectionFilter").value;
 
-  const list = state.members.filter(m =>
+ const list = state.members
+  .filter(m =>
     `${m.firstName} ${m.lastName}`.toLowerCase().includes(q) &&
     (!f || m.section === f)
+  )
+  .sort((a, b) =>
+    (a.lastName || "").localeCompare(
+      b.lastName || "",
+      "fr",
+      { sensitivity: "base" }
+    )
   );
 
   $("#membersGrid").innerHTML = list.map(m => `
