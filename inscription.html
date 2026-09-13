@@ -238,7 +238,19 @@ delete data.medicalCertificate;
       status: "pending",
       createdAt: serverTimestamp()
     });
-
+await fetch("https://script.google.com/macros/s/AKfycby0QaVlxs3bcYhbZopeGCsUv0mwyYS6A5bY1Cs_cA0NWUazkaIqVyWM8ewUEFDReLebVkg/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
+  body: JSON.stringify({
+    email: data.email,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    section: data.section
+  })
+});
     message.textContent = "✅ Votre inscription a bien été envoyée.";
     form.reset();
 
