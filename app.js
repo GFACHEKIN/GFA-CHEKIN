@@ -287,7 +287,132 @@ function renderMembers(){
     .join("");
 }
 
+
+function renderAttendanceDashboard(){
+  const select = $("#attendanceMemberSelect");
+  if(!select) return;
+
+  const currentValue = select.value;
+
+  const members = [...state.members].sort((a,b) =>
+    (a.lastName || "").localeCompare(
+      b.lastName || "",
+      "fr",
+      { sensitivity: "base" }
+    )
+  );
+
+  select.innerHTML =
+    `<option value="">Sélectionner un adhérent</option>` +
+    members.map(m =>
+      `<option value="${m.id}">${m.firstName || ""} ${m.lastName || ""}</option>`
+    ).join("");
+
+  if(currentValue && members.some(m => m.id === currentValue)){
+    select.value = currentValue;
+  }
+
+  function showMember(){
+    const memberId = select.value;
+
+    if(!memberId){
+      $("#individualAttendanceTotal").textContent = "0";
+      $("#individualLastAttendance").textContent = "-";
+      $("#individualMemberSection").textContent = "-";
+      $("#individualMonthlyAttendance").innerHTML = "";
+      $("#individualAttendanceHistory").innerHTML = "";
+      return;
+    }
+
+    const member = state.members.find(m => m.id === memberId);
+    if(!member) return;
+
+    const fullName =
+      `${member.firstName || ""} ${member.lastName || ""}`
+        .trim()
+        .toLowerCase();
+
+    const records = state.attendance
+      .filter(a => {
+        const attendanceName =
+          (a.memberName || a.name || "")
+            .trim()
+            .toLowerCase();
+
+        return a.memberId === member.id || attendanceName === fullName;
+      })
+      .sort((a,b) =>
+        (b.date || "").localeCompare(a.date || "")
+      );
+
+    $("#individualAttendanceTotal").textContent = records.length;
+
+    $("#individualLastAttendance").textContent =
+      records.length && records[0].date
+        ? fmt(records[0].date)
+        : "-";
+
+    $("#individualMemberSection").textContent =
+      member.section || "-";
+
+    const monthly = {};
+
+    records.forEach(a => {
+      if(!a.date) return;
+
+      const month = a.date.slice(0,7);
+      monthly[month] = (monthly[month] || 0) + 1;
+    });
+
+    $("#individualMonthlyAttendance").innerHTML =
+      Object.keys(monthly)
+        .sort()
+        .reverse()
+        .map(month => {
+          const [year, monthNumber] = month.split("-");
+
+          const monthName = new Date(
+            Number(year),
+            Number(monthNumber) - 1,
+            1
+          ).toLocaleDateString("fr-FR", {
+            month: "long",
+            year: "numeric"
+          });
+
+          return `
+            <div class="list-item">
+              <strong>${monthName}</strong>
+              <span>${monthly[month]} présence(s)</span>
+            </div>
+          `;
+        })
+        .join("");
+
+    $("#individualAttendanceHistory").innerHTML =
+      records.length
+        ? records.map(a => `
+            <tr>
+              <td>${a.date ? fmt(a.date) : ""}</td>
+              <td>${a.className || ""}</td>
+              <td>${a.section || member.section || ""}</td>
+            </tr>
+          `).join("")
+        : `
+            <tr>
+              <td colspan="3">Aucune présence enregistrée</td>
+            </tr>
+          `;
+  }
+
+  select.onchange = showMember;
+
+  if(select.value){
+    showMember();
+  }
+}
 function renderAttendance(){
+  renderAttendanceDashboard();
 $("#attendanceBody").innerHTML = state.attendance.slice().reverse().map(a => `<tr><td>${fmt(a.date)}</td><td>${a.memberName || a.name || ""}</td><td>${a.section || ""}</td><td>${a.className || ""}</td><td><button class="secondary attendance-delete" data-id="${a.id}">Supprimer</button></td></tr>`).join("");$$(".attendance-delete").forEach(btn=>btn.addEventListener("click",async()=>{
   if(!confirm("Supprimer cette présence ?")) return;
   const id=btn.dataset.id;
