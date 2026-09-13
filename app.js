@@ -349,7 +349,15 @@ function renderAttendanceDashboard(){
       </div>
     `;
   }).join("");
+document.querySelectorAll("#attendanceDashboardGrid .member-card").forEach(card => {
+  card.addEventListener("click", () => {
+    const memberId = card.dataset.memberId;
+    const member = state.members.find(m => m.id === memberId);
+    if (!member) return;
 
+    openAttendanceMemberDetails(member);
+  });
+});
   if(!members.length){
     grid.innerHTML = `
       <div class="card">
@@ -362,6 +370,84 @@ function renderAttendanceDashboard(){
     search.addEventListener("input", renderAttendanceDashboard);
     search.dataset.listenerAdded = "true";
   }
+}function openAttendanceMemberDetails(member){
+  if(!member) return;
+
+  const firstName = member.firstName || "";
+  const lastName = member.lastName || "";
+  const fullName = `${firstName} ${lastName}`.trim();
+  const reverseName = `${lastName} ${firstName}`.trim();
+
+  const records = state.attendance
+    .filter(a =>
+      a.memberId === member.id ||
+      a.memberName === fullName ||
+      a.memberName === reverseName
+    )
+    .sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  $$(".view").forEach(v => v.classList.remove("active"));
+  $("#individualAttendance").classList.add("active");
+
+  $("#title").textContent = `${lastName} ${firstName}`.trim();
+
+  $("#individualMemberName").textContent =
+    `${lastName} ${firstName}`.trim();
+
+  $("#individualTotalAttendance").textContent =
+    records.length;
+
+  $("#individualLastAttendance").textContent =
+    records.length ? fmt(records[0].date) : "Aucune";
+
+  $("#individualMemberSection").textContent =
+    member.section || "-";
+
+  const monthly = {};
+
+  records.forEach(a => {
+    if(!a.date) return;
+    const month = a.date.slice(0,7);
+    monthly[month] = (monthly[month] || 0) + 1;
+  });
+
+  $("#individualMonthlyAttendance").innerHTML =
+    Object.keys(monthly)
+      .sort()
+      .reverse()
+      .map(month => {
+        const [year, monthNumber] = month.split("-");
+        const monthName = new Date(
+          Number(year),
+          Number(monthNumber) - 1,
+          1
+        ).toLocaleDateString("fr-FR", {
+          month: "long",
+          year: "numeric"
+        });
+
+        return `
+          <p>
+            <strong>${monthName} :</strong>
+            ${monthly[month]} présence${monthly[month] > 1 ? "s" : ""}
+          </p>
+        `;
+      })
+      .join("") || "<p>Aucune présence enregistrée.</p>";
+
+  $("#individualAttendanceBody").innerHTML =
+    records.map(a => `
+      <div class="card">
+        <strong>${fmt(a.date)}</strong>
+        <p>${a.course || a.className || a.session || "Séance non renseignée"}</p>
+      </div>
+    `).join("") || "<p>Aucune présence enregistrée.</p>";
+
+  $("#backAttendanceDashboard").onclick = () => {
+    $$(".view").forEach(v => v.classList.remove("active"));
+    $("#attendanceDashboard").classList.add("active");
+    $("#title").textContent = "Suivi présences";
+  };
 }
   function renderAttendance(){
 renderAttendanceDashboard();
