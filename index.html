@@ -143,6 +143,47 @@
 
   <div id="attendanceDashboardGrid" class="grid three"></div>
 </section>
+      <section id="individualAttendance" class="view admin">
+
+  <button id="backAttendanceDashboard" class="secondary">
+    ← Retour au suivi
+  </button>
+
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">SUIVI INDIVIDUEL</p>
+      <h2 id="individualMemberName">Adhérent</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>
+      <strong>Total présences :</strong>
+      <span id="individualAttendanceTotal">0</span>
+    </p>
+
+    <p>
+      <strong>Dernière présence :</strong>
+      <span id="individualLastAttendance">—</span>
+    </p>
+
+    <p>
+      <strong>Section :</strong>
+      <span id="individualMemberSection">—</span>
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Présences par mois</h3>
+    <div id="individualMonthlyAttendance"></div>
+  </div>
+
+  <div class="card">
+    <h3>Historique des entraînements</h3>
+    <div id="individualAttendanceBody"></div>
+  </div>
+
+</section>
       <section id="attendance" class="view coach">
         <button id="exportBtn" class="secondary admin">Exporter CSV</button>
         <div class="card"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Nom</th><th>Section</th><th>Cours</th></tr></thead><tbody id="attendanceBody"></tbody></table></div></div>
