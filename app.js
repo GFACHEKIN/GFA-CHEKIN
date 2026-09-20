@@ -556,7 +556,7 @@ form.elements["gradeDateNoire"].value = member.gradeDateNoire || "";
 }));
 }
 function renderCompetitions(){
-  $("#competitionList").innerHTML=state.competitions.map(c=>`<div class="event"><strong>${fmt(c.date)}</strong><div><b>${c.name}</b><p>${c.place||""}</p></div><span class="badge warning">À venir</span></div>`).join("");
+  $("#competitionList").innerHTML=state.competitions.map(c=>`<div class="event"><strong>${fmt(c.date)}</strong><div><b>${${c.name || "Compétition"}}</b><p>${c.place||""}</p></div><span class="badge warning">À venir</span></div>`).join("");
 }function renderRegistrations(){
   const grid = $("#registrationsGrid");
   if(!grid) return;
