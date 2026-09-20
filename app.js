@@ -835,7 +835,9 @@ function renderCompetitionRanking() {
   results.forEach(r => {
     if (!fighters[r.memberId]) {
       fighters[r.memberId] = {
+        
         name: r.memberName || "Combattant",
+        resultIds: [],
         competitions: 0,
         fights: 0,
         wins: 0,
@@ -849,6 +851,7 @@ function renderCompetitionRanking() {
     }
 
     const f = fighters[r.memberId];
+    f.resultIds.push(r.id);
 
     f.competitions++;
     f.fights += Number(r.fights || 0);
@@ -883,6 +886,7 @@ function renderCompetitionRanking() {
       <td>${f.silver}</td>
       <td>${f.bronze}</td>
       <td><strong>${f.points}</strong></td>
+      <td><button class="btn secondary" onclick="editCompetitionResult('${f.resultIds[0]}')">✏️ Modifier</button></td>
     </tr>
   `).join("");
 }
