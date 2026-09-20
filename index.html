@@ -297,7 +297,78 @@
       
       <div class="actions"><button type="button" id="cancelMember" class="secondary">Annuler</button><button class="primary">Enregistrer</button></div>
     </form>
-  </dialog>
+  </dialog><dialog id="competitionResultModal">
+  <form id="competitionResultForm">
+    <div class="modal-head">
+      <h3>🏆 Ajouter un résultat</h3>
+      <button type="button" id="closeCompetitionResultModal">×</button>
+    </div>
+
+    <div class="grid two">
+
+      <div>
+        <label>Combattant</label>
+        <select name="memberId" id="competitionMember" required>
+          <option value="">Choisir un adhérent</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Date de la compétition</label>
+        <input type="date" name="date" required>
+      </div>
+
+      <div>
+        <label>Nom de la compétition</label>
+        <input type="text" name="competitionName" required>
+      </div>
+
+      <div>
+        <label>Catégorie</label>
+        <select name="category">
+          <option value="Adultes">Adultes</option>
+          <option value="Kids / Ados">Kids / Ados</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Nombre de combats</label>
+        <input type="number" name="fights" min="0" value="0" required>
+      </div>
+
+      <div>
+        <label>Victoires</label>
+        <input type="number" name="wins" min="0" value="0" required>
+      </div>
+
+      <div>
+        <label>Défaites</label>
+        <input type="number" name="losses" min="0" value="0" required>
+      </div>
+
+      <div>
+        <label>Victoires par soumission</label>
+        <input type="number" name="submissions" min="0" value="0">
+      </div>
+
+      <div>
+        <label>Médaille</label>
+        <select name="medal">
+          <option value="">Aucune</option>
+          <option value="gold">🥇 Or</option>
+          <option value="silver">🥈 Argent</option>
+          <option value="bronze">🥉 Bronze</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button type="button" id="cancelCompetitionResult" class="secondary">Annuler</button>
+      <button type="submit" class="primary">Enregistrer le résultat</button>
+    </div>
+  </form>
+</dialog>
 <dialog id="memberDetailsModal">
   <div class="modal-head">
     <h3>Fiche adhérent</h3>
