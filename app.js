@@ -173,6 +173,8 @@ async function loadCloudData(){
     const att = await getDocs(collection(state.db,"attendance"));
     const cmp = await getDocs(collection(state.db,"competitions"));
     const reg = await getDocs(collection(state.db,"registrations"));
+    const compResults = await getDocs(collection(state.db,"competitionResults"));
+    
 
     state.members = mem.docs.map(d=>({id:d.id,...d.data()}));
 
@@ -187,6 +189,7 @@ async function loadCloudData(){
    state.attendance = att.docs.map(d=>({id:d.id,...d.data()}));
 state.competitions = cmp.docs.map(d=>({id:d.id,...d.data()}));
 state.registrations = reg.docs.map(d=>({id:d.id,...d.data()}));
+    state.competitionResults = compResults.docs.map(d=>({id:d.id,...d.data()}));
   } else {
     const publicMem = await getDocs(collection(state.db,"publicMembers"));
     const att = await getDocs(collection(state.db,"attendance"));
@@ -195,6 +198,7 @@ state.registrations = reg.docs.map(d=>({id:d.id,...d.data()}));
     state.attendance=att.docs.map(d=>({id:d.id,...d.data()}));
     state.competitions=[];
     state.registrations=[];
+    state.competitionResults=[];
   }
 
   renderAll();
@@ -723,7 +727,165 @@ $("#addCompetitionBtn").addEventListener("click",async()=>{
   if(state.mode==="firebase"){const id=await addCloud("competitions",data);state.competitions.push({id,...data})}
   else state.competitions.push({id:crypto.randomUUID(),...data});
   saveLocal();renderAll();
+});// ===== RÉSULTATS COMPÉTITIONS =====
+
+$("#addCompetitionResultBtn")?.addEventListener("click", () => {
+  const select = $("#competitionMember");
+
+  select.innerHTML =
+    '<option value="">Choisir un adhérent</option>' +
+    state.members
+      .slice()
+      .sort((a,b) => (a.lastName || "").localeCompare(b.lastName || ""))
+      .map(m =>
+        `<option value="${m.id}">${m.lastName || ""} ${m.firstName || ""}</option>`
+      )
+      .join("");
+
+  $("#competitionResultForm").reset();
+  $("#competitionResultModal").showModal();
 });
+
+$("#closeCompetitionResultModal")?.addEventListener("click", () => {
+  $("#competitionResultModal").close();
+});
+
+$("#cancelCompetitionResult")?.addEventListener("click", () => {
+  $("#competitionResultModal").close();
+});
+
+$("#competitionResultForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const memberId = form.elements["memberId"].value;
+  const member = state.members.find(m => m.id === memberId);
+
+  if (!member) {
+    alert("Adhérent introuvable");
+    return;
+  }
+
+  const medal = form.elements["medal"].value;
+  const wins = Number(form.elements["wins"].value || 0);
+  const submissions = Number(form.elements["submissions"].value || 0);
+
+  let medalPoints = 0;
+  if (medal === "gold") medalPoints = 8;
+  if (medal === "silver") medalPoints = 5;
+  if (medal === "bronze") medalPoints = 3;
+
+  const points =
+    1 +
+    (wins * 2) +
+    (submissions * 2) +
+    medalPoints;
+
+  const data = {
+    memberId,
+    memberName: `${member.firstName || ""} ${member.lastName || ""}`.trim(),
+    date: form.elements["date"].value,
+    competitionName: form.elements["competitionName"].value,
+    category: form.elements["category"].value,
+    fights: Number(form.elements["fights"].value || 0),
+    wins,
+    losses: Number(form.elements["losses"].value || 0),
+    submissions,
+    medal,
+    points
+  };
+
+  if (!state.competitionResults) {
+    state.competitionResults = [];
+  }
+
+  if (state.mode === "firebase") {
+    const id = await addCloud("competitionResults", data);
+    state.competitionResults.push({ id, ...data });
+  } else {
+    state.competitionResults.push({
+      id: crypto.randomUUID(),
+      ...data
+    });
+  }
+
+  saveLocal();
+  $("#competitionResultModal").close();
+
+  renderCompetitionRanking();
+});
+function renderCompetitionRanking() {
+  
+  const tbody = $("#competitionRankingBody");
+  if (!tbody) return;
+
+  const results = state.competitionResults || [];
+
+  if (!results.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="11">Aucun résultat enregistré pour le moment.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  const fighters = {};
+
+  results.forEach(r => {
+    if (!fighters[r.memberId]) {
+      fighters[r.memberId] = {
+        name: r.memberName || "Combattant",
+        competitions: 0,
+        fights: 0,
+        wins: 0,
+        losses: 0,
+        submissions: 0,
+        gold: 0,
+        silver: 0,
+        bronze: 0,
+        points: 0
+      };
+    }
+
+    const f = fighters[r.memberId];
+
+    f.competitions++;
+    f.fights += Number(r.fights || 0);
+    f.wins += Number(r.wins || 0);
+    f.losses += Number(r.losses || 0);
+    f.submissions += Number(r.submissions || 0);
+    f.points += Number(r.points || 0);
+
+    if (r.medal === "gold") f.gold++;
+    if (r.medal === "silver") f.silver++;
+    if (r.medal === "bronze") f.bronze++;
+  });
+
+  const ranking = Object.values(fighters)
+    .sort((a, b) =>
+      b.points - a.points ||
+      b.gold - a.gold ||
+      b.silver - a.silver ||
+      b.wins - a.wins
+    );
+
+  tbody.innerHTML = ranking.map((f, index) => `
+    <tr>
+      <td><strong>${index + 1}</strong></td>
+      <td><strong>${f.name}</strong></td>
+      <td>${f.competitions}</td>
+      <td>${f.fights}</td>
+      <td>${f.wins}</td>
+      <td>${f.losses}</td>
+      <td>${f.submissions}</td>
+      <td>${f.gold}</td>
+      <td>${f.silver}</td>
+      <td>${f.bronze}</td>
+      <td><strong>${f.points}</strong></td>
+    </tr>
+  `).join("");
+}
 
 $("#exportBtn").addEventListener("click",()=>{
   const rows=[["Date","Prénom","Nom","Section","Cours"],...state.attendance.map(a=>{
